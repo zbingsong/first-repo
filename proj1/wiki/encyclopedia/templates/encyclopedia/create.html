@@ -9,7 +9,7 @@
 
     <form>
         {% csrf_token %}
-        {{ form }}
+        {{ form|linebreaks }}
         <input type="submit" value="Submit">
     </form>
 

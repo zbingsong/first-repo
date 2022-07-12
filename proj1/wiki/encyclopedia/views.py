@@ -5,10 +5,11 @@ from django.shortcuts import render
 from django.urls import reverse
 import markdown2
 from . import util
+import random
 
 class NewEntry(forms.Form):
-    new_entry_title = forms.CharField(label='New entry')
-    new_entry = forms.CharField(label='Content')
+    new_entry_title = forms.CharField(label='New Entry Title')
+    new_entry = forms.CharField(label='Content', widget=forms.Textarea)
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -38,3 +39,7 @@ def entry(request, entry_title):
         })
     else:
         return HttpResponse('Requested entry not found.')
+
+def random_page(request):
+    entries = util.list_entries()
+    return entry(request, random.choice(entries))
