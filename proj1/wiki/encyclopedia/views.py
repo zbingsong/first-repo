@@ -26,13 +26,21 @@ def create(request):
             else:
                 new_entry = form.cleaned_data['new_entry']
                 util.save_entry(new_entry_title, new_entry)
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('entry', args=[new_entry_title]))
     return render(request, 'encyclopedia/create.html', {
         'form': NewEntry()
     })
 
-def edit(request):
-    return render(request, 'encyclopedia/edit.html')
+def edit(request, entry_title):
+    if request.method == 'POST':
+        form = NewEntry(entry_title, request.POST)
+        if form.is_valid():
+            new_entry = form.cleaned_data['new_entry']
+            util.save_entry(entry_title, new_entry)
+            return HttpResponseRedirect(reverse('entry', args=[entry_title]))
+    return render(request, 'encyclopedia/edit.html', {
+        'form': NewEntry(entry_title, util.get_entry(entry_title))
+    })
 
 def entry(request, entry_title):
     if entry_title in util.list_entries():
