@@ -3,7 +3,7 @@ from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
+import markdown2
 from . import util
 
 class NewEntry(forms.Form):
@@ -29,3 +29,12 @@ def create(request):
     return render(request, 'encyclopedia/create.html', {
         'form': NewEntry()
     })
+
+def entry(request, entry_title):
+    if entry_title in util.list_entries():
+        return render(request, 'encyclopedia/entry.html', {
+            'entry_title': entry_title,
+            'entry_content': markdown2.markdown(util.get_entry(entry_title))
+        })
+    else:
+        return HttpResponse('Requested entry not found.')
