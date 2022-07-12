@@ -8,4 +8,9 @@
 
     {{ entry_content | safe }}
 
+    <br>
+    <a href="{% url 'edit' entry_title=entry_title %}">
+        Edit
+    </a>
+
 {% endblock %}

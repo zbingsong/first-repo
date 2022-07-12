@@ -7,9 +7,16 @@
 {% block body %}
     <h1>Create New Entry</h1>
 
-    <form>
+    <form method="post">
         {% csrf_token %}
-        {{ form|linebreaks }}
+        {% for form_item in form %}
+            <p>
+                {{ form_item.label }}
+                <br>
+                {{ form_item }}
+                <br>
+            </p>         
+        {% endfor %}
         <input type="submit" value="Submit">
     </form>
 

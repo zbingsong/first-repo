@@ -33,13 +33,20 @@ def create(request):
 
 def edit(request, entry_title):
     if request.method == 'POST':
-        form = NewEntry(entry_title, request.POST)
+        # the filling of the form is a dict
+        form = NewEntry({
+            'new_entry_title': entry_title,
+            'new_entry': request.POST['new_entry']
+        })
         if form.is_valid():
             new_entry = form.cleaned_data['new_entry']
             util.save_entry(entry_title, new_entry)
             return HttpResponseRedirect(reverse('entry', args=[entry_title]))
     return render(request, 'encyclopedia/edit.html', {
-        'form': NewEntry(entry_title, util.get_entry(entry_title))
+        'form': NewEntry({
+            'new_entry_title': entry_title,
+            'new_entry': util.get_entry(entry_title)
+        })
     })
 
 def entry(request, entry_title):

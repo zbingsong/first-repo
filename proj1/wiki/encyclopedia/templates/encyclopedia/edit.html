@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Edit Entry {{ form['new_entry_title'].value }}</h1>
+    <h1>Edit Entry: {{ form.new_entry_title.value }}</h1>
 
     <form method="post">
         {% csrf_token %}
-        {{ form['new_entry'] }}
+        {{ form.new_entry }}
+        <br>
         <input type="submit" value="Save">
     </form>
 
