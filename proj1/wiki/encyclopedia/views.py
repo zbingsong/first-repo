@@ -31,6 +31,9 @@ def create(request):
         'form': NewEntry()
     })
 
+def edit(request):
+    return render(request, 'encyclopedia/edit.html')
+
 def entry(request, entry_title):
     if entry_title in util.list_entries():
         return render(request, 'encyclopedia/entry.html', {
@@ -41,5 +44,19 @@ def entry(request, entry_title):
         return HttpResponse('Requested entry not found.')
 
 def random_page(request):
+    entry = random.choice(util.list_entries())
+    return HttpResponseRedirect(reverse('entry', args=[entry]))
+
+def search_entry(request):
+    query = request.GET.get('q')
     entries = util.list_entries()
-    return entry(request, random.choice(entries))
+    if query in entries:
+        return HttpResponseRedirect(reverse('entry', args=[query]))
+    else:
+        matching_entries = []
+        for entry in entries:
+            if query in entry:
+                matching_entries.append(entry)
+        return render(request, 'encyclopedia/search.html', {
+            'matching_entries': matching_entries
+        })
