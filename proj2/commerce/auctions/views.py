@@ -1,14 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import *
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        'listings': ActiveListings.objects.all()
+    })
 
 
 def login_view(request):
@@ -61,3 +63,12 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def item(request, item_id):
+    try:
+        item = Item.objects.get(id=item_id)
+    except IntegrityError:
+        return HttpResponseBadRequest('Invalid item ID.')
+    render(request, 'auctions/item.html', {
+        'item_id': item.id
+    })
