@@ -3,13 +3,20 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
 
 from .models import *
 
+class NewItem(forms.Form):
+    title = forms.CharField(max_length=64)
+    description = forms.CharField(max_length=512, widget=forms.Textarea)
+    category = forms.ModelChoiceField(choices=Category.objects.all())
+    image_url = forms.URLField(max_length=512, required=False)
+    starting_bid = forms.IntegerField()
 
 def index(request):
     return render(request, "auctions/index.html", {
-        'listings': ActiveListings.objects.all()
+        'listings': Listings.objects.all()
     })
 
 
@@ -71,4 +78,14 @@ def item(request, item_id):
         return HttpResponseBadRequest('Invalid item ID.')
     render(request, 'auctions/item.html', {
         'item_id': item.id
+    })
+
+def create(request):
+    if request.method == 'POST':
+        form = NewItem(request.POST)
+        if form.is_valid():
+            Item.objects.add(form)
+
+    return render(request, 'auctions/create.html', {
+        'form': NewItem()
     })

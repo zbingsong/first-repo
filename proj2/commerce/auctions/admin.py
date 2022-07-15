@@ -6,4 +6,4 @@ from .models import *
 admin.site.register(Item)
 admin.site.register(User)
 admin.site.register(Category)
-admin.site.register(ActiveListings)
+admin.site.register(Listings)
