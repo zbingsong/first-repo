@@ -1,0 +1,19 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    <ul>
+        {% for cate, category_show in categories %}
+            <li>
+                <a href="{% url 'category_view' select_category=cate %}">
+                    {{ category_show }}
+                </a>
+            </li>
+        {% empty %}
+            <li>
+                <h4>
+                    No category has been created.
+                </h4>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
