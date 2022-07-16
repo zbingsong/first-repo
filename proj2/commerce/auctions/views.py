@@ -22,6 +22,15 @@ def index(request):
         'listings': Item.objects.filter(if_active=True)
     })
 
+def category_list(request):
+    return render(request, 'auctions/category_list.html', {
+        'categories': Item.category.field.choices
+    })
+
+def category_view(request, select_category):
+    return render(request, 'auctions/category_view.html', {
+        'category_items': Item.objects.filter(category=select_category)
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -150,4 +159,10 @@ def create(request):
             })
     return render(request, 'auctions/create.html', {
         'form': NewItem()
+    })
+
+@login_required(login_url='auctions/login.html')
+def watchlist(request):
+    return render(request, 'auctions/watchlist.html', {
+        'user': request.user
     })

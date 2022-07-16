@@ -10,5 +10,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
-    path('create', views.create, name='create')
+    path('create', views.create, name='create'),
+    path('category', views.category_list, name='category_list'),
+    path('category/<str:select_category>', views.category_view, name='category_view')
 ]
