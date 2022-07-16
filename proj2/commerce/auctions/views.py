@@ -1,4 +1,6 @@
+from pydoc import describe
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
@@ -10,13 +12,14 @@ from .models import *
 class NewItem(forms.Form):
     title = forms.CharField(max_length=64)
     description = forms.CharField(max_length=512, widget=forms.Textarea)
-    category = forms.ModelChoiceField(choices=Category.objects.all())
-    image_url = forms.URLField(max_length=512, required=False)
     starting_bid = forms.IntegerField()
+    image_url = forms.URLField(max_length=512, required=False)
+    # image_path = forms.ImageField()
+    category = forms.ModelChoiceField(choices=Item.category.field.choices)
 
 def index(request):
     return render(request, "auctions/index.html", {
-        'listings': Listings.objects.all()
+        'listings': Item.objects.filter(if_active=True)
     })
 
 
@@ -76,16 +79,75 @@ def item(request, item_id):
         item = Item.objects.get(id=item_id)
     except IntegrityError:
         return HttpResponseBadRequest('Invalid item ID.')
-    render(request, 'auctions/item.html', {
-        'item_id': item.id
+    if request.method == 'POST':
+        current_user = request.user
+        # if user is not logged in, redirect to login page
+        if not current_user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        # if user is logged in
+        else:
+            # if the user is the seller, allow user to end listing and decide winner
+            if current_user.id == item.seller.id:
+                item.if_active == False
+                winner = item.top_bidder
+                winner.purchase.add(item)
+                item.save()
+                winner.save()
+            # if not seller, allow user to place bid
+            else:
+                # check if bid is valid
+                try:
+                    bid = int(request.POST['bid'])
+                except ValueError:
+                    return render(request, 'auctions/item.html', {
+                        'item': item,
+                        'message': 'Invalid bid.'
+                    })
+                if bid <= item.current_bid:
+                    return render(request, 'auctions/item.html', {
+                        'item': item,
+                        'message': 'Your bid must be higher than the current bid.'
+                    })
+                # remove this item from previous top bidder's bidding list
+                prev_bidder = item.top_bidder
+                prev_bidder.bidding.remove(item)
+                prev_bidder.save()
+                # add this item to current user's bidding list
+                current_user.bidding.add(item)
+                current_user.save()
+                # update the current bid
+                item.current_bid = bid
+                item.save()
+    return render(request, 'auctions/item.html', {
+        'item': item
     })
 
+@login_required(login_url='auctions/login.html')
 def create(request):
     if request.method == 'POST':
         form = NewItem(request.POST)
         if form.is_valid():
-            Item.objects.add(form)
-
+            form = form.cleaned_data
+            new_item = Item(
+                title=form['title'], 
+                description=form['description'],
+                starting_bid=form['starting_bid'],
+                image_url=form['image_url'],
+                category=form['category'],
+                current_bid=form['starting_bid'],
+                if_active=True
+            )
+            new_item.save()
+            # save the item to the user
+            user = User.objects.get(id=request.user.id)
+            user.selling.add(new_item)
+            # redirect to the listing
+            return HttpResponseRedirect(reverse('item.html', args=(new_item.pk,)))
+        else:
+            return render(request, 'auctions/create.html', {
+                'form': form,
+                'message': 'Invalid item. Please check your inputs.'
+            })
     return render(request, 'auctions/create.html', {
         'form': NewItem()
     })

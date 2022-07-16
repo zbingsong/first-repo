@@ -1,5 +1,58 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    {{ item_id }}
+    <div>
+        {% if item.image_url %}
+            <img src="{{ item.image_url }}">
+        {% endif %}
+    </div>
+    <div>
+        <p>
+            <h2>
+                {{ item.title }}
+            </h2>
+        </p>
+        <p>
+            <h5>
+                Categories: 
+                {% for cate in item.category }}
+                    cate
+                {% endfor %}
+            </h5>
+        </p>
+        <p>
+            Listed by: {{ item.seller.username }}
+        </p>
+        <p>
+            {{ item.description }}
+        </p>
+        <p>
+            <h4>
+                Current Bid: {{ item.current_bid }}
+            </h4>
+        </p>
+        {% if message %}
+            <p>
+                {{ message }}
+            </p>
+        {% endif %}
+        {% if item.if_active %}
+            {% if request.user.id != item.seller.id %}
+                <form method="post">
+                    <input type="text" name="'bid" method="post" placeholder="Your Bid">
+                    <input type="submit" value="Place Bid">
+                </form>
+            {% else %}
+                <form method="post">
+                    <input type="submit" value="End Listing Now">
+                </form>
+            {% endif %}
+        {% else %}
+            <p>
+                <h4>
+                    The listing has ended. The top bidder is {{ item.top_bidder.username }}.
+                </h4>
+            </p>
+        {% endif %}
+    </div>
 {% endblock %}

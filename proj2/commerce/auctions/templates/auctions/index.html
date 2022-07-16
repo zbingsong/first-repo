@@ -5,7 +5,22 @@
 
     {% for listing in listings %}
         <a href="{% url 'item' %}">
-            {{ listing }}
+            <div>
+                {% if listing.item.image_url %}
+                    <img src="{{ listing.item.image_url }}" width="200px">
+            </div>
+            <div>
+                <p>
+                    <h3>
+                        {{ listing.item.title }}
+                    </h3>
+                </p>
+                <p>
+                    <h5>
+                        Price: $ {{ listing.current_bid }}
+                    </h5>
+                </p>
+            </div>
         </a>
         <br>
     {% empty %}

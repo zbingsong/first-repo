@@ -1,5 +1,12 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    TODO
+    {% if message %}
+        <h3>{{ message }}</h3>
+    {% endif %}
+    <br>
+    <form method="post">
+        {{ form.as_ul }}
+        <input type="submit" value="List item">
+    </form>
 {% endblock %}
