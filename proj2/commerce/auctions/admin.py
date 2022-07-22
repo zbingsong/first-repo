@@ -3,7 +3,7 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register(Item)
 admin.site.register(User)
-admin.site.register(Category)
-admin.site.register(Listings)
+admin.site.register(Item)
+admin.site.register(Bidding)
+admin.site.register(Comment)

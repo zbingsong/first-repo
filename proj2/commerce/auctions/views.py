@@ -15,7 +15,7 @@ class NewItem(forms.Form):
     starting_bid = forms.IntegerField()
     image_url = forms.URLField(max_length=512, required=False)
     # image_path = forms.ImageField()
-    category = forms.ModelChoiceField(choices=Item.category.field.choices)
+    category = forms.ChoiceField(choices=Item.category.field.choices)
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -48,8 +48,7 @@ def login_view(request):
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
             })
-    else:
-        return render(request, "auctions/login.html")
+    return render(request, "auctions/login.html")
 
 
 def logout_view(request):
@@ -80,8 +79,8 @@ def register(request):
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
-    else:
-        return render(request, "auctions/register.html")
+    return render(request, "auctions/register.html")
+
 
 def item(request, item_id):
     try:
@@ -98,10 +97,8 @@ def item(request, item_id):
             # if the user is the seller, allow user to end listing and decide winner
             if current_user.id == item.seller.id:
                 item.if_active == False
-                winner = item.top_bidder
-                winner.purchase.add(item)
+                item.buyer = item.bidding.current_bidder
                 item.save()
-                winner.save()
             # if not seller, allow user to place bid
             else:
                 # check if bid is valid
@@ -117,16 +114,9 @@ def item(request, item_id):
                         'item': item,
                         'message': 'Your bid must be higher than the current bid.'
                     })
-                # remove this item from previous top bidder's bidding list
-                prev_bidder = item.top_bidder
-                prev_bidder.bidding.remove(item)
-                prev_bidder.save()
                 # add this item to current user's bidding list
-                current_user.bidding.add(item)
-                current_user.save()
-                # update the current bid
-                item.current_bid = bid
-                item.save()
+                new_bid = Bidding(item=item, current_bid=bid, current_bidder=current_user)
+                new_bid.save()
     return render(request, 'auctions/item.html', {
         'item': item
     })
@@ -143,13 +133,9 @@ def create(request):
                 starting_bid=form['starting_bid'],
                 image_url=form['image_url'],
                 category=form['category'],
-                current_bid=form['starting_bid'],
-                if_active=True
+                seller = request.user
             )
             new_item.save()
-            # save the item to the user
-            user = User.objects.get(id=request.user.id)
-            user.selling.add(new_item)
             # redirect to the listing
             return HttpResponseRedirect(reverse('item.html', args=(new_item.pk,)))
         else:
