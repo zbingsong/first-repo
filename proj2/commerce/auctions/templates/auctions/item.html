@@ -4,6 +4,8 @@
     <div>
         {% if item.image_url %}
             <img src="{{ item.image_url }}">
+        {% else %}
+            <h3>No image</h3>
         {% endif %}
     </div>
     <div>
@@ -15,8 +17,8 @@
         <p>
             <h5>
                 Categories: 
-                {% for cate in item.category }}
-                    cate
+                {% for cate in item.category %}
+                    {{ cate }}
                 {% endfor %}
             </h5>
         </p>

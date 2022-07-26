@@ -4,10 +4,13 @@
     <h2>Active Listings</h2>
 
     {% for item in listings %}
-        <a href="{% url 'item' %}">
+        <a href="{% url 'item' item_id=item.pk %}">
             <div>
-                {% if listing.item.image_url %}
+                {% if item.image_url %}
                     <img src="{{ item.image_url }}" width="200px">
+                {% else %}
+                    <h3>No image</h3>
+                {% endif %}
             </div>
             <div>
                 <p>
@@ -17,7 +20,7 @@
                 </p>
                 <p>
                     <h5>
-                        Price: $ {{ current_bid }}
+                        Price: $ {{ item.bidding.current_bid }}
                     </h5>
                 </p>
             </div>

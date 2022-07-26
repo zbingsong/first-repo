@@ -109,7 +109,7 @@ def item(request, item_id):
                         'item': item,
                         'message': 'Invalid bid.'
                     })
-                if bid <= item.current_bid:
+                if bid <= item.bidding.current_bid:
                     return render(request, 'auctions/item.html', {
                         'item': item,
                         'message': 'Your bid must be higher than the current bid.'
@@ -136,6 +136,9 @@ def create(request):
                 seller = request.user
             )
             new_item.save()
+            # make the current bid the starting bid
+            start = Bidding(item=new_item, current_bid=form['starting_bid'], current_bidder=request.user)
+            start.save()
             # redirect to the listing
             return HttpResponseRedirect(reverse('item.html', args=(new_item.pk,)))
         else:
