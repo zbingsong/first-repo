@@ -1,4 +1,4 @@
-from pydoc import describe
+from django.db.models import Max
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -95,21 +95,22 @@ def item(request, item_id):
         # if user is logged in
         else:
             # if the user is the seller, allow user to end listing and decide winner
-            if current_user.id == item.seller.id:
-                item.if_active == False
-                item.buyer = item.bidding.current_bidder
+            if current_user.username == item.seller.username:
+                item.if_active = False
+                last_bid = item.bidding.filter(current_bid=item.price).first()
+                item.buyer = last_bid.current_bidder
                 item.save()
             # if not seller, allow user to place bid
             else:
                 # check if bid is valid
                 try:
-                    bid = int(request.POST['bid'])
+                    bid = float(request.POST['bid'])
                 except ValueError:
                     return render(request, 'auctions/item.html', {
                         'item': item,
                         'message': 'Invalid bid.'
                     })
-                if bid <= item.bidding.current_bid:
+                if bid <= item.price:
                     return render(request, 'auctions/item.html', {
                         'item': item,
                         'message': 'Your bid must be higher than the current bid.'
@@ -117,8 +118,10 @@ def item(request, item_id):
                 # add this item to current user's bidding list
                 new_bid = Bidding(item=item, current_bid=bid, current_bidder=current_user)
                 new_bid.save()
+                item.price = bid
+                item.save()
     return render(request, 'auctions/item.html', {
-        'item': item
+        'item': item,
     })
 
 @login_required(login_url='auctions/login.html')
@@ -131,14 +134,12 @@ def create(request):
                 title=form['title'], 
                 description=form['description'],
                 starting_bid=form['starting_bid'],
+                price=form['starting_bid'],
                 image_url=form['image_url'],
                 category=form['category'],
-                seller = request.user
+                seller=request.user
             )
             new_item.save()
-            # make the current bid the starting bid
-            start = Bidding(item=new_item, current_bid=form['starting_bid'], current_bidder=request.user)
-            start.save()
             # redirect to the listing
             return HttpResponseRedirect(reverse('item.html', args=(new_item.pk,)))
         else:

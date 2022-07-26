@@ -13,7 +13,8 @@ class User(AbstractUser):
 class Item(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
-    starting_bid = models.PositiveIntegerField()
+    starting_bid = models.DecimalField(default=1, decimal_places=2, max_digits=10)
+    price = models.DecimalField(default=1, decimal_places=2, max_digits=10)
     image_url = models.URLField(max_length=512, null=True, blank=True)
     # image_upload = models.ImageField(blank=True)
     category = models.CharField(max_length=64,
@@ -30,7 +31,7 @@ class Item(models.Model):
 
 class Bidding(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='bidding')
-    current_bid = models.IntegerField()
+    current_bid = models.DecimalField(default=1, decimal_places=2, max_digits=10)
     current_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bid')
     created_time = models.DateTimeField(auto_now_add=True)
 

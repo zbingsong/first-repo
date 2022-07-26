@@ -1,3 +1,21 @@
 body {
     padding: 10px;
 }
+
+.item-link {
+    display: grid;
+    grid-template-columns: 500px 500px;
+    grid-gap: 20px;
+    padding: 10px;
+    border: 1px solid;
+}
+
+.item-link .item-image {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.item-link .item-info {
+    grid-row: 1;
+    grid-column: 2;
+}

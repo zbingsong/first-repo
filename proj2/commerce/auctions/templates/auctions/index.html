@@ -4,28 +4,33 @@
     <h2>Active Listings</h2>
 
     {% for item in listings %}
-        <a href="{% url 'item' item_id=item.pk %}">
-            <div>
-                {% if item.image_url %}
-                    <img src="{{ item.image_url }}" width="200px">
-                {% else %}
-                    <h3>No image</h3>
-                {% endif %}
+            <div class="item-link">
+                <a href="{% url 'item' item_id=item.pk %}" class="item-image">
+                    {% if item.image_url %}
+                        <img src="{{ item.image_url }}" width="500px">
+                    {% else %}
+                        <h3>No image</h3>
+                    {% endif %}
+                </a>
+                <div class="item-info">
+                    <a href="{% url 'item' item_id=item.pk %}">
+                        <h3>
+                            {{ item.title }}
+                        </h3>
+                    </a>
+                    <p>
+                        <h5>
+                            Price: $ {{ item.price|floatformat:2 }}
+                        </h5>
+                    </p>
+                    <p>
+                        Created time: {{ item.created_time }}
+                    </p>
+                    <p>
+                        Seller: {{ item.seller }}
+                    </p>
+                </div>
             </div>
-            <div>
-                <p>
-                    <h3>
-                        {{ item.title }}
-                    </h3>
-                </p>
-                <p>
-                    <h5>
-                        Price: $ {{ item.bidding.current_bid }}
-                    </h5>
-                </p>
-            </div>
-        </a>
-        <br>
     {% empty %}
         <h5>There is no active listing at this time.</h5>
     {% endfor %}
