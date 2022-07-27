@@ -169,6 +169,25 @@ def create(request):
 @login_required(login_url='/login')
 def edit(request, item_id):
     item = Item.objects.get(pk=item_id)
+    if request.method == 'POST':
+        form = NewItem(request.POST)
+        if form.is_valid():
+            form = form.cleaned_data
+            # check if the item already has bids, if so, can't change starting_bid
+            if item.bidding != None:
+                if form['starting_bid'] != item.starting_bid:
+                    return render(request, 'auctions/edit.html', {
+                        'form': form,
+                        'message': 'The listing has at least one bid. Cannot change starting bid now.'
+                    })
+            else:
+                item.starting_bid = form['starting_bid']
+            item.title = form['title']
+            item.description = form['description']
+            item.image_url = form['image_url']
+            item.category = form['category']
+            item.save()
+            return HttpResponseRedirect(reverse('item', args=(item.pk,)))
     return render(request, 'auctions/edit.html', {
         'form': NewItem({
             'title': item.title,
