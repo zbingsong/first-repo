@@ -5,7 +5,7 @@
     <div class="item-listing">
         <a href="{% url 'item' item_id=item.pk %}" class="item-image">
             {% if item.image_url %}
-                <img src="{{ item.image_url }}" width="500px">
+                <img src="{{ item.image_url }}">
             {% else %}
                 <h3>No image</h3>
             {% endif %}
