@@ -12,7 +12,7 @@ from .models import *
 class NewItem(forms.Form):
     title = forms.CharField(max_length=64)
     description = forms.CharField(max_length=512, widget=forms.Textarea)
-    starting_bid = forms.IntegerField()
+    starting_bid = forms.DecimalField(min_value=0.01)
     image_url = forms.URLField(max_length=512, required=False)
     # image_path = forms.ImageField()
     category = forms.ChoiceField(choices=Item.category.field.choices)
@@ -30,7 +30,7 @@ def category_list(request):
 def category_view(request, select_category):
     return render(request, 'auctions/category_view.html', {
         'category': select_category,
-        'category_items': Item.objects.filter(category=select_category)
+        'category_items': Item.objects.filter(category=select_category, if_active=True)
     })
 
 def login_view(request):
@@ -99,7 +99,8 @@ def item(request, item_id):
             if current_user.username == item.seller.username:
                 item.if_active = False
                 last_bid = item.bidding.filter(current_bid=item.price).first()
-                item.buyer = last_bid.current_bidder
+                if last_bid != None:
+                    item.buyer = last_bid.current_bidder
                 item.save()
             # if not seller, allow user to place bid
             else:
@@ -142,7 +143,7 @@ def create(request):
             )
             new_item.save()
             # redirect to the listing
-            return HttpResponseRedirect(reverse('item.html', args=(new_item.pk,)))
+            return HttpResponseRedirect(reverse('item', args=(new_item.pk,)))
         else:
             return render(request, 'auctions/create.html', {
                 'form': form,

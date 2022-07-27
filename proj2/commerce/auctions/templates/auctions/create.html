@@ -6,7 +6,8 @@
     {% endif %}
     <br>
     <form method="post">
+        {% csrf_token %}
         {{ form.as_ul }}
-        <input type="submit" value="List item">
+        <input type="submit" value="List Item">
     </form>
 {% endblock %}

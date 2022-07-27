@@ -11,22 +11,20 @@
         </div>
         <div class="item-info">
             <p>
-                <h2>
-                    {{ item.title }}
-                </h2>
+                <h2>{{ item.title }}</h2>
             </p>
             <p>
-                <h5>
-                    Categories: {{ item.category }}
+                <h5>Categories: 
+                    <a href="{% url 'category_view' select_category=item.category%}">
+                        {{ item.category }}
+                    </a>
                 </h5>
             </p>
             <p>
                 Listed by: {{ item.seller.username }}
             </p>
             <p>
-                <h4>
-                    Current Bid: $ {{ item.price|floatformat:2 }}
-                </h4>
+                <h4>Current Bid: $ {{ item.price|floatformat:2 }}</h4>
             </p>
             {% if message %}
                 <p style="color: red;">
@@ -44,21 +42,28 @@
                 {% else %}
                     <form method="post">
                         {% csrf_token %}
-                        <input type="submit" value="End Listing Now">
+                        <input type="submit" name="end_listing" value="End Listing Now">
                     </form>
                 {% endif %}
             {% else %}
                 <p>
-                    <h4>
-                        The listing has ended. The top bidder is {{ item.buyer.username }}.
-                    </h4>
+                    <h4>The listing has ended.</h4>
                 </p>
+                {% if item.buyer %}
+                    <p>The top bidder is {{ item.buyer.username }}.</p>                    
+                {% else %}
+                    <p>The item failed to sell.</p>
+                    {% if request.user.username == item.seller.username %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="submit" name="relist" value="Edit and Relist">
+                        </form>
+                    {% endif %}
+                {% endif %}
             {% endif %}
             <br>
             <p>
-                <h4>
-                    Details:
-                </h4>
+                <h4>Details:</h4>
             </p>
             <p>
                 {{ item.description }}
