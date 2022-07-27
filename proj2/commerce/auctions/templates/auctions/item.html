@@ -64,7 +64,13 @@
                 </p>
                 <!-- if the item has at least one bid, show the buyer -->
                 {% if item.buyer %}
-                    <p>The top bidder is {{ item.buyer.username }}.</p>
+                    <!-- if the current user won the auction, say so -->
+                    {% if item.buyer.username == request.user.username %}
+                        <p>You won the auction!</p>
+                    <!-- otherwise, display the winner of the auction -->
+                    {% else %}
+                        <p>The top bidder is {{ item.buyer.username }}.</p>
+                    {% endif %}
                 <!-- otherwise, the item did not sell, ask seller if want to relist -->
                 {% else %}
                     <p>The item failed to sell.</p>
