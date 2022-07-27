@@ -23,7 +23,7 @@ class Item(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     if_active = models.BooleanField(default=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='selling')
-    watcher = models.ManyToManyField(User, blank=True, null=True, related_name='watching')
+    watcher = models.ManyToManyField(User, blank=True, related_name='watching')
     buyer = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='purchased')
 
     def __str__(self) -> str:
