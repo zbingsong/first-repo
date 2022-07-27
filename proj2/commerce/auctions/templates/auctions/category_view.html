@@ -1,31 +1,41 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    {% for item in category_items%}
-        <div>
-            <a href="{% url 'item' %}">
-                <div>
-                    {% if listing.item.image_url %}
-                        <img src="{{ item.item.image_url }}" width="200px">
-                </div>
-                <div>
-                    <p>
-                        <h3>
-                            {{ listing.item.title }}
-                        </h3>
-                    </p>
-                    <p>
-                        <h5>
-                            Price: $ {{ listing.current_bid }}
-                        </h5>
-                    </p>
-                </div>
+    <h2>
+        Active Listings in <em>{{ category }}</em>
+    </h2>
+
+    {% for item in category_items %}
+        <div class="item-listing">
+            <a href="{% url 'item' item_id=item.pk %}" class="item-image">
+                {% if item.image_url %}
+                    <img src="{{ item.image_url }}" width="500px">
+                {% else %}
+                    <h3>No image</h3>
+                {% endif %}
             </a>
-            <br>
+            <div class="item-info">
+                <a href="{% url 'item' item_id=item.pk %}">
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+                </a>
+                <p>
+                    <h5>
+                        Price: $ {{ item.price|floatformat:2 }}
+                    </h5>
+                </p>
+                <p>
+                    Created time: {{ item.created_time }}
+                </p>
+                <p>
+                    Seller: {{ item.seller }}
+                </p>
+            </div>
         </div>
     {% empty %}
-        <h2>
+        <h4>
             There is no listing under this category.
-        </h2>
+        </h4>
     {% endfor %}
 {% endblock %}

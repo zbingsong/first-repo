@@ -1,61 +1,68 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <div>
-        {% if item.image_url %}
-            <img src="{{ item.image_url }}" width="300px">
-        {% else %}
-            <h3>No image</h3>
-        {% endif %}
-    </div>
-    <br>
-    <div>
-        <p>
-            <h2>
-                {{ item.title }}
-            </h2>
-        </p>
-        <p>
-            <h5>
-                Categories: {{ item.category }}
-            </h5>
-        </p>
-        <p>
-            Listed by: {{ item.seller.username }}
-        </p>
-        <p>
-            {{ item.description }}
-        </p>
-        <p>
-            <h4>
-                Current Bid: $ {{ item.price|floatformat:2 }}
-            </h4>
-        </p>
-        {% if message %}
-            <p>
-                {{ message }}
-            </p>
-        {% endif %}
-        {% if item.if_active %}
-            {% if request.user.username != item.seller.username %}
-                <h3>Your bid: </h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="number" name="bid" placeholder="Your Bid" min="{{ price }}">
-                    <input type="submit" value="Place Bid">
-                </form>
+    <div class="item-listing">
+        <div class="item-image">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}" width="500px">
             {% else %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="End Listing Now">
-                </form>
+                <h3>No image</h3>
             {% endif %}
-        {% else %}
+        </div>
+        <div class="item-info">
+            <p>
+                <h2>
+                    {{ item.title }}
+                </h2>
+            </p>
+            <p>
+                <h5>
+                    Categories: {{ item.category }}
+                </h5>
+            </p>
+            <p>
+                Listed by: {{ item.seller.username }}
+            </p>
             <p>
                 <h4>
-                    The listing has ended. The top bidder is {{ item.buyer.username }}.
+                    Current Bid: $ {{ item.price|floatformat:2 }}
                 </h4>
             </p>
-        {% endif %}
+            {% if message %}
+                <p style="color: red;">
+                    {{ message }}
+                </p>
+            {% endif %}
+            {% if item.if_active %}
+                {% if request.user.username != item.seller.username %}
+                    <h3>Your bid: </h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="number" name="bid" placeholder="Your Bid" min="{{ price }}" step="0.01" >
+                        <input type="submit" value="Place Bid">
+                    </form>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="End Listing Now">
+                    </form>
+                {% endif %}
+            {% else %}
+                <p>
+                    <h4>
+                        The listing has ended. The top bidder is {{ item.buyer.username }}.
+                    </h4>
+                </p>
+            {% endif %}
+            <br>
+            <p>
+                <h4>
+                    Details:
+                </h4>
+            </p>
+            <p>
+                {{ item.description }}
+            </p>
+        </div>
     </div>
 {% endblock %}

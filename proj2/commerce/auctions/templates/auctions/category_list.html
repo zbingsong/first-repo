@@ -4,9 +4,11 @@
     <ul>
         {% for cate, category_show in categories %}
             <li>
-                <a href="{% url 'category_view' select_category=cate %}">
-                    {{ category_show }}
-                </a>
+                <h4>
+                    <a href="{% url 'category_view' select_category=cate %}">
+                        {{ category_show }}
+                    </a>
+                </h4>                
             </li>
         {% empty %}
             <li>

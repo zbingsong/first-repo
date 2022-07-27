@@ -2,7 +2,7 @@ body {
     padding: 10px;
 }
 
-.item-link {
+.item-listing {
     display: grid;
     grid-template-columns: 500px 500px;
     grid-gap: 20px;
@@ -10,12 +10,12 @@ body {
     border: 1px solid;
 }
 
-.item-link .item-image {
+.item-listing .item-image {
     grid-row: 1;
     grid-column: 1;
 }
 
-.item-link .item-info {
+.item-listing .item-info {
     grid-row: 1;
     grid-column: 2;
 }

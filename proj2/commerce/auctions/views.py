@@ -29,6 +29,7 @@ def category_list(request):
 
 def category_view(request, select_category):
     return render(request, 'auctions/category_view.html', {
+        'category': select_category,
         'category_items': Item.objects.filter(category=select_category)
     })
 
