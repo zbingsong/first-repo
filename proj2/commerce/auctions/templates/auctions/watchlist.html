@@ -1,5 +1,47 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    TODO
+    {% for item in listings %}
+    <div class="item-listing">
+        <a href="{% url 'item' item_id=item.pk %}" class="item-image">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}" width="500px">
+            {% else %}
+                <h3>No image</h3>
+            {% endif %}
+        </a>
+        <div class="item-info">
+            <a href="{% url 'item' item_id=item.pk %}">
+                <h3>
+                    {{ item.title }}
+                </h3>
+            </a>
+            <p>
+                <h5>
+                    Price: $ {{ item.price|floatformat:2 }}
+                </h5>
+            </p>
+            <p>
+                Created time: {{ item.created_time }}
+            </p>
+            <p>
+                Seller: {{ item.seller }}
+            </p>
+            {% if not item.if_active %}
+                <p>
+                    The listing has ended.
+                </p>
+            {% endif %}
+            <p>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.pk }}">
+                    <input type="submit" value="Remove from Watch List">
+                </form>
+            </p>
+        </div>
+    </div>
+    {% empty %}
+        <h5>You are not watching any listing right now.</h5>
+    {% endfor %}
 {% endblock %}

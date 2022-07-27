@@ -9,6 +9,7 @@
                 <h3>No image</h3>
             {% endif %}
         </div>
+
         <div class="item-info">
             <p>
                 <h2>{{ item.title }}</h2>
@@ -26,37 +27,51 @@
             <p>
                 <h4>Current Bid: $ {{ item.price|floatformat:2 }}</h4>
             </p>
+
             {% if message %}
                 <p style="color: red;">
                     {{ message }}
                 </p>
             {% endif %}
+
+            <!-- if item is active, allow placing bid, watching, or ending the listing -->
             {% if item.if_active %}
+                <!-- allow bidding and watching if user is not seller -->
                 {% if request.user.username != item.seller.username %}
                     <h3>Your bid: </h3>
                     <form method="post">
                         {% csrf_token %}
                         <input type="number" name="bid" placeholder="Your Bid" min="{{ price }}" step="0.01" >
-                        <input type="submit" value="Place Bid">
+                        <input type="submit" name="place_bid" value="Place Bid">
+                        {% if item in request.user.watching.all %}
+                            <input type="submit" name="remove_watch" value="Remove from Watch List">
+                        {% else %}
+                            <input type="submit" name="add_watch" value="Add to Watch List">
+                        {% endif %}
                     </form>
+                <!-- allow ending the listing if user is seller -->
                 {% else %}
                     <form method="post">
                         {% csrf_token %}
+                        <input type="submit" name="edit" value="Edit Listing">
                         <input type="submit" name="end_listing" value="End Listing Now">
                     </form>
                 {% endif %}
+            <!-- otherwise, say the item is no longer active -->
             {% else %}
                 <p>
                     <h4>The listing has ended.</h4>
                 </p>
+                <!-- if the item has at least one bid, show the buyer -->
                 {% if item.buyer %}
-                    <p>The top bidder is {{ item.buyer.username }}.</p>                    
+                    <p>The top bidder is {{ item.buyer.username }}.</p>
+                <!-- otherwise, the item did not sell, ask seller if want to relist -->
                 {% else %}
                     <p>The item failed to sell.</p>
                     {% if request.user.username == item.seller.username %}
                         <form method="post">
                             {% csrf_token %}
-                            <input type="submit" name="relist" value="Edit and Relist">
+                            <input type="submit" name="edit" value="Edit and Relist">
                         </form>
                     {% endif %}
                 {% endif %}
