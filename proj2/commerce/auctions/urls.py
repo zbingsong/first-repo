@@ -16,6 +16,7 @@ urlpatterns = [
     path('watchlist', views.watchlist, name='watchlist'),
     # create a listing
     path('create', views.create, name='create'),
+    path('edit/<int:item_id>', views.edit, name='edit'),
     path('category', views.category_list, name='category_list'),
     path('category/<str:select_category>', views.category_view, name='category_view')
 ]

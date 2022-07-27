@@ -1,8 +1,7 @@
-from django.db.models import Max
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django import forms
@@ -94,46 +93,48 @@ def item(request, item_id):
         if not current_user.is_authenticated:
             return HttpResponseRedirect(reverse('login'))
         # if user is logged in
-        else:
-            # if the user is the seller, allow user to end listing or edit listing
-            if current_user.username == item.seller.username:
-                # end listing
-                if 'end_listing' in request.POST:
-                    item.if_active = False
-                    last_bid = item.bidding.filter(current_bid=item.price).first()
-                    if last_bid != None:
-                        item.buyer = last_bid.current_bidder
-                    item.save()
-                # edit listing
-                else:
-                    pass
-            # if not seller, allow user to place bid or add item to watch list
-            else:
-                # place bid
-                if 'place_bid' in request.POST:
-                    # check if bid is valid
-                    try:
-                        bid = float(request.POST['bid'])
-                    except ValueError:
-                        return render(request, 'auctions/item.html', {
-                            'item': item,
-                            'message': 'Invalid bid.'
-                        })
-                    if bid <= item.price:
-                        return render(request, 'auctions/item.html', {
-                            'item': item,
-                            'message': 'Your bid must be higher than the current bid.'
-                        })
-                    # add this item to current user's bidding list
-                    new_bid = Bidding(item=item, current_bid=bid, current_bidder=current_user)
-                    new_bid.save()
-                    item.price = bid
-                # add to watch list
-                elif 'add_watch' in request.POST:
-                    item.watcher.add(current_user)
-                else:
-                    item.watcher.remove(current_user)
+        if 'comment' in request.POST:
+            comment = Comment(item=item, content=request.POST['comment_content'], commenter=request.user)
+            comment.save()
+        # if the user is the seller, allow user to end listing or edit listing
+        elif current_user.username == item.seller.username:
+            # end listing
+            if 'end_listing' in request.POST:
+                item.if_active = False
+                last_bid = item.bidding.filter(current_bid=item.price).first()
+                if last_bid != None:
+                    item.buyer = last_bid.current_bidder
                 item.save()
+            # edit listing
+            else:
+                return HttpResponseRedirect(reverse('edit', args=(item_id,)))
+        # if not seller, allow user to place bid or add item to watch list
+        else:
+            # place bid
+            if 'place_bid' in request.POST:
+                # check if bid is valid
+                try:
+                    bid = float(request.POST['bid'])
+                except ValueError:
+                    return render(request, 'auctions/item.html', {
+                        'item': item,
+                        'message': 'Invalid bid.'
+                    })
+                if bid <= item.price:
+                    return render(request, 'auctions/item.html', {
+                        'item': item,
+                        'message': 'Your bid must be higher than the current bid.'
+                    })
+                # add this item to current user's bidding list
+                new_bid = Bidding(item=item, current_bid=bid, current_bidder=current_user)
+                new_bid.save()
+                item.price = bid
+            # add to watch list
+            elif 'add_watch' in request.POST:
+                item.watcher.add(current_user)
+            else:
+                item.watcher.remove(current_user)
+            item.save()
     return render(request, 'auctions/item.html', {
         'item': item,
     })
@@ -163,6 +164,19 @@ def create(request):
             })
     return render(request, 'auctions/create.html', {
         'form': NewItem()
+    })
+
+@login_required(login_url='/login')
+def edit(request, item_id):
+    item = Item.objects.get(pk=item_id)
+    return render(request, 'auctions/edit.html', {
+        'form': NewItem({
+            'title': item.title,
+            'description': item.description,
+            'starting_bid': item.starting_bid,
+            'image_url': item.url,
+            'category': item.category
+        })
     })
 
 @login_required(login_url='/login')

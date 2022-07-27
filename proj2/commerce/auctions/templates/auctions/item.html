@@ -85,4 +85,26 @@
             </p>
         </div>
     </div>
+
+    <!-- comment section -->
+    <div>
+        <h3>Comments:</h3>
+
+        {% for comment in item.item_comment.all %}
+            <p>
+                <h5>{{ comment.commenter.username }} said at {{ comment.created_time }}</h5>
+            </p>
+            <p style="text-indent: 10px;">
+                {{ comment.content }}
+            </p>
+        {% empty %}
+            <h5>There is no comment for this listing.</h5>
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="comment_content" placeholder="Type your comments here" style="height: 100px; width: 200px">
+            <input type="submit" name="comment" value="Submit Comment">
+        </form>
+    </div>
 {% endblock %}
