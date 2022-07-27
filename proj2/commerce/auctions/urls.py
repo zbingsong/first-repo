@@ -11,6 +11,8 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     # show watch list of a user
+    path('selling', views.selling_view, name='selling'),
+    path('purchased', views.purchase_view, name='purchased'),
     path('watchlist', views.watchlist, name='watchlist'),
     # create a listing
     path('create', views.create, name='create'),

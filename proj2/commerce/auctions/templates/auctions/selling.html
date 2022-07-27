@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% for sale_type, sale_item in listings.items %}
+        <h2>{{ sale_type }} Sales</h2>
+
+        {% for item in sale_item %}
+            <div class="item-listing">
+                <a href="{% url 'item' item_id=item.pk %}" class="item-image">
+                    {% if item.image_url %}
+                        <img src="{{ item.image_url }}" width="500px">
+                    {% else %}
+                        <h3>No image</h3>
+                    {% endif %}
+                </a>
+                <div class="item-info">
+                    <a href="{% url 'item' item_id=item.pk %}">
+                        <h3>{{ item.title }}</h3>
+                    </a>
+                    <p>
+                        <h5>Price: $ {{ item.price|floatformat:2 }}</h5>
+                    </p>
+                    <p>
+                        Created time: {{ item.created_time }}
+                    </p>
+                    <p>
+                        Seller: {{ item.seller }}
+                    </p>
+                </div>
+            </div>
+        {% empty %}
+            <h5>You don't have any such listing at this time.</h5>
+        {% endfor %}
+
+        <br>
+    {% endfor %}
+{% endblock %}

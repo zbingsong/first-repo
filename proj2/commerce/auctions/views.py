@@ -174,3 +174,19 @@ def watchlist(request):
     return render(request, 'auctions/watchlist.html', {
         'listings': request.user.watching.all()
     })
+
+@login_required(login_url='/login')
+def selling_view(request):
+    return render(request, 'auctions/selling.html', {
+        'listings': {
+            'Active': request.user.selling.filter(if_active=True), 
+            'Sold': request.user.selling.filter(if_active=False, buyer__isnull=False), 
+            'Unsold': request.user.selling.filter(if_active=False, buyer__isnull=True)
+        }
+    })
+
+@login_required(login_url='/login')
+def purchase_view(request):
+    return render(request, 'auctions/purchased.html', {
+        'listings': request.user.purchased.all()
+    })
