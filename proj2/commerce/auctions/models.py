@@ -16,9 +16,14 @@ class Item(models.Model):
     starting_bid = models.DecimalField(default=1, decimal_places=2, max_digits=10)
     price = models.DecimalField(default=1, decimal_places=2, max_digits=10)
     image_url = models.URLField(max_length=512, null=True, blank=True)
-    # image_upload = models.ImageField(blank=True)
+    image_upload = models.ImageField(upload_to='listings', null=True, blank=True)
     category = models.CharField(max_length=64,
-        choices=[('Clothes', 'Clothes'), ('Electronics', 'Electronics')]
+        choices=[
+            ('Clothes', 'Clothes'), 
+            ('Electronics', 'Electronics'), 
+            ('Home', 'Home'),
+            ('Toys', 'Toys')
+        ]
     )
     created_time = models.DateTimeField(auto_now_add=True)
     if_active = models.BooleanField(default=True)

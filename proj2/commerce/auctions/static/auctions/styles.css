@@ -4,7 +4,7 @@ body {
 
 .item-listing {
     display: grid;
-    grid-template-columns: 400px 400px;
+    grid-template-columns: 400px 600px;
     grid-gap: 20px;
     padding: 10px;
     border: 1px solid;
@@ -14,8 +14,9 @@ body {
     grid-row: 1;
     grid-column: 1;
 }
+
 .item-listing .item-image img {
-    width: 360px;
+    width: 350px;
 }
 
 .item-listing .item-info {

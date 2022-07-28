@@ -13,7 +13,7 @@ class NewItem(forms.Form):
     description = forms.CharField(max_length=512, widget=forms.Textarea)
     starting_bid = forms.DecimalField(min_value=0.01)
     image_url = forms.URLField(max_length=512, required=False)
-    # image_path = forms.ImageField()
+    image_upload = forms.ImageField(required=False)
     category = forms.ChoiceField(choices=Item.category.field.choices)
 
 def index(request):
@@ -43,7 +43,11 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            # redirect to the proper page if user is redirected to login from other pages
+            next_url = request.POST.get('next')
+            if next_url:
+                return HttpResponseRedirect(next_url)
+            return HttpResponseRedirect(reverse('index'))
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -139,7 +143,7 @@ def item(request, item_id):
         'item': item,
     })
 
-@login_required(login_url='auctions/login.html')
+@login_required
 def create(request):
     if request.method == 'POST':
         form = NewItem(request.POST)
@@ -151,6 +155,7 @@ def create(request):
                 starting_bid=form['starting_bid'],
                 price=form['starting_bid'],
                 image_url=form['image_url'],
+                image_upload=form['image_upload'],
                 category=form['category'],
                 seller=request.user
             )
@@ -166,26 +171,28 @@ def create(request):
         'form': NewItem()
     })
 
-@login_required(login_url='/login')
+@login_required
 def edit(request, item_id):
     item = Item.objects.get(pk=item_id)
-    if request.method == 'POST':
-        form = NewItem(request.POST)
+    if request.method == 'POST':        
+        # get both the input data and the file itself
+        form = NewItem(request.POST, request.FILES)
         if form.is_valid():
-            form = form.cleaned_data
             # check if the item already has bids, if so, can't change starting_bid
             if item.bidding != None:
-                if form['starting_bid'] != item.starting_bid:
+                if form.cleaned_data['starting_bid'] != item.starting_bid:
                     return render(request, 'auctions/edit.html', {
                         'form': form,
                         'message': 'The listing has at least one bid. Cannot change starting bid now.'
                     })
-            else:
-                item.starting_bid = form['starting_bid']
+            form = form.cleaned_data
+            item.starting_bid = form['starting_bid']
             item.title = form['title']
             item.description = form['description']
             item.image_url = form['image_url']
+            item.image_upload = form['image_upload']
             item.category = form['category']
+            item.if_active = True
             item.save()
             return HttpResponseRedirect(reverse('item', args=(item.pk,)))
     return render(request, 'auctions/edit.html', {
@@ -193,12 +200,12 @@ def edit(request, item_id):
             'title': item.title,
             'description': item.description,
             'starting_bid': item.starting_bid,
-            'image_url': item.url,
+            'image_url': item.image_url,
             'category': item.category
         })
     })
 
-@login_required(login_url='/login')
+@login_required
 def watchlist(request):
     if request.method == 'POST':
         item = request.user.watching.get(pk=request.POST['item_id'])
@@ -208,7 +215,7 @@ def watchlist(request):
         'listings': request.user.watching.all()
     })
 
-@login_required(login_url='/login')
+@login_required
 def selling_view(request):
     return render(request, 'auctions/selling.html', {
         'listings': {
@@ -218,7 +225,7 @@ def selling_view(request):
         }
     })
 
-@login_required(login_url='/login')
+@login_required
 def purchase_view(request):
     return render(request, 'auctions/purchased.html', {
         'listings': request.user.purchased.all()

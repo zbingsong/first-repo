@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -19,4 +21,4 @@ urlpatterns = [
     path('edit/<int:item_id>', views.edit, name='edit'),
     path('category', views.category_list, name='category_list'),
     path('category/<str:select_category>', views.category_view, name='category_view')
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,8 +9,10 @@
                 <a href="{% url 'item' item_id=item.pk %}" class="item-image">
                     {% if item.image_url %}
                         <img src="{{ item.image_url }}">
+                    {% elif item.image_upload %}
+                        <img src="{{ item.image_upload.url }}">
                     {% else %}
-                        <h3>No image</h3>
+                        <img src="/media/No_image_available.png">
                     {% endif %}
                 </a>
                 <div class="item-info">

@@ -5,8 +5,10 @@
         <div class="item-image">
             {% if item.image_url %}
                 <img src="{{ item.image_url }}">
+            {% elif item.image_upload %}
+                <img src="{{ item.image_upload.url }}">
             {% else %}
-                <h3>No image</h3>
+                <img src="/media/No_image_available.png">
             {% endif %}
         </div>
 
@@ -53,7 +55,7 @@
                 {% else %}
                     <form method="post">
                         {% csrf_token %}
-                        <input type="submit" name="edit" value="Edit Listing">
+                        <input type="submit" name="edit_listing" value="Edit Listing">
                         <input type="submit" name="end_listing" value="End Listing Now">
                     </form>
                 {% endif %}

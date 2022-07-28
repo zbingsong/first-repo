@@ -124,3 +124,6 @@ STATIC_URL = '/static/'
 # folder that holds user-uploaded file
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# for logging in
+LOGIN_URL = 'login'

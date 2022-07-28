@@ -5,9 +5,9 @@
         <h3>{{ message }}</h3>
     {% endif %}
     <br>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_ul }}
-        <input type="submit" value="List Item">
+        <input type="submit" value="Finish Editing">
     </form>
 {% endblock %}
