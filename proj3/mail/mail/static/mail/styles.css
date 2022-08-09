@@ -1,23 +1,31 @@
+body {
+    min-width: 500px;
+    width: auto;
+}
+
 textarea {
     min-height: 400px;
 }
 
-/* for displaying emails */
 #emails-view .email-container {
     display: grid;
-    grid-template-columns: 100px auto 100px;
+    grid-template-columns: 180px auto 170px;
+    grid-template-rows: 30px;
     column-gap: 10px;
-    border: 1px solid grey;
+    padding: 5px;
+    border: 1px solid black;
 }
 
 #emails-view .email-container .email-sender {
     grid-column: 1;
-    font: bold;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 #emails-view .email-container .email-subject {
     grid-column: 2;
-    /* if subject is too long, cut off the part that's outside and display an ellipsis */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
