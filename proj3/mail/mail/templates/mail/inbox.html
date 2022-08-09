@@ -30,6 +30,32 @@
             <input type="submit" class="btn btn-primary"/>
         </form>
     </div>
+
+    <div id="single-email">
+        <div>
+            <span style="font: bold">From:</span> <span id="view-email-from"></span>
+        </div>
+        <div>
+            <span style="font: bold">To:</span> <span id="view-email-to"></span>
+        </div>
+        <div>
+            <span style="font: bold">Subject:</span> <span id="view-email-subject"></span>
+        </div>
+        <div>
+            <span style="font: bold">Timestamp:</span> <span id="view-email-timestamp"></span>
+        </div>
+
+        <div id="view-email-button">
+            <button class="btn btn-sm btn-outline-primary" id="view-email-reply">Reply</button>
+            <button class="btn btn-sm btn-outline-primary" id="view-email-archive">Archive</button>
+            <button class="btn btn-sm btn-outline-primary" id="view-email-unarchive">Unarchive</button>
+        </div>
+
+        <hr>
+        
+        <div id="view-email-body">
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}

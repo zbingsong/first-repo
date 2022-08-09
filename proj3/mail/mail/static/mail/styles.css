@@ -1,3 +1,30 @@
 textarea {
     min-height: 400px;
 }
+
+/* for displaying emails */
+#emails-view .email-container {
+    display: grid;
+    grid-template-columns: 100px auto 100px;
+    column-gap: 10px;
+    border: 1px solid grey;
+}
+
+#emails-view .email-container .email-sender {
+    grid-column: 1;
+    font: bold;
+}
+
+#emails-view .email-container .email-subject {
+    grid-column: 2;
+    /* if subject is too long, cut off the part that's outside and display an ellipsis */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#emails-view .email-container .email-timestamp {
+    grid-column: 3;
+    font: grey;
+}
+
