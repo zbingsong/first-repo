@@ -32,6 +32,7 @@ function compose_email(reply = false, content = '') {
 
   // When the form is submitted, send the email
   document.querySelector('#compose-form').onsubmit = () => {
+    console.log('sending email');
     fetch('/emails', {
       method: 'POST',
       body: JSON.stringify({
@@ -40,18 +41,29 @@ function compose_email(reply = false, content = '') {
         body: document.querySelector('#compose-body').value
       })
     })
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === 400) {
-        alert(`${result.error}`);
+    .then(response => {
+      console.log(response);
+      if (response.ok) {
+        return response.json();
       } else {
-        alert(`${result.message}`);
-        load_mailbox('sent');
-      };
+        throw response;
+      }
+    })
+    .then(result => {
+      console.log(result);
+      alert(result.message);
+      load_mailbox('sent');
+    })
+    .catch(error_promise => {
+      console.log(error_promise);
+      error_promise.json().then(body => {
+        console.log(body)
+        alert(body.error);
+      });
     });
-  };
 
-  return true;
+    return false;
+  };
 };
 
 
@@ -68,65 +80,71 @@ function load_mailbox(mailbox) {
   // Show emails
   // Get emails
   fetch(`/emails/${mailbox}`)
-  .then(response => response.json())
-  .then(emails => {
-    // if get an error, display
-    if (emails.status === 400) {
-      const error_message = document.createElement('div');
-      error_message.innerHTML = 'No such mailbox exists!';
-      document.querySelector('#emails-view').append(error_message);
+  .then(response => {
+    if (response.ok) {
+      return response.json();
     } else {
-      // otherwise, create a div that contains the list of emails
-      const email_list = document.querySelector('#emails-view');
-      emails.forEach(content => {
-        // each list item is a div that contains the sender, subject, and timestamp
-        // create the email item container
-        let email_container = document.createElement('div');
-        // email_container.className = 'row';
-        email_container.className = 'email-container';
-        // Set the background color to distinguish read and unread emails
-        if (content.read) {
-          email_container.style.background = 'grey';
-        } else {
-          email_container.style.background = 'white';
-        };
-
-        // create the email sender div
-        let sender = document.createElement('div');
-        sender.innerHTML = content.sender;
-        // sender.className = 'col sender';
-        sender.className = 'email-sender';
-
-        // create the email subject div
-        let subject = document.createElement('div');
-        subject.innerHTML = content.subject.trim();
-        // subject.className = 'col subject';
-        subject.className = 'email-subject';
-        // if the subject is empty, replace it with '(No Subject)'
-        if (subject.innerHTML === '') {
-          subject.innerHTML = '(No Subject)'
-        };
-
-        let timestamp = document.createElement('div');
-        timestamp.innerHTML = content.timestamp;
-        // timestamp.className = 'col timestamp';
-        timestamp.className = 'email-timestamp';
-        
-        // put the three things into the email container
-        email_container.append(sender, subject, timestamp);
-        // add event listener to the container so that if it is clicked, load the corresponding email
-        email_container.addEventListener('click', () => {
-          if (mailbox === 'sent') {
-            load_email(content.id, false);
-          } else {
-            console.log(mailbox);
-            load_email(content.id, true);
-          };
-        });
-        // append the container to the list of emails
-        email_list.append(email_container);
-      });
+      throw response;
     };
+  })
+  .then(emails => {
+    console.log(emails);
+    // create a div that contains the list of emails
+    const email_list = document.querySelector('#emails-view');
+    emails.forEach(content => {
+      // each list item is a div that contains the sender, subject, and timestamp
+      // create the email item container
+      let email_container = document.createElement('div');
+      // email_container.className = 'row';
+      email_container.className = 'email-container';
+      // Set the background color to distinguish read and unread emails
+      if (content.read) {
+        email_container.style.background = 'grey';
+      } else {
+        email_container.style.background = 'white';
+      };
+
+      // create the email sender div
+      let sender = document.createElement('div');
+      sender.innerHTML = content.sender;
+      // sender.className = 'col sender';
+      sender.className = 'email-sender';
+
+      // create the email subject div
+      let subject = document.createElement('div');
+      subject.innerHTML = content.subject.trim();
+      // subject.className = 'col subject';
+      subject.className = 'email-subject';
+      // if the subject is empty, replace it with '(No Subject)'
+      if (subject.innerHTML === '') {
+        subject.innerHTML = '(No Subject)'
+      };
+
+      let timestamp = document.createElement('div');
+      timestamp.innerHTML = content.timestamp;
+      // timestamp.className = 'col timestamp';
+      timestamp.className = 'email-timestamp';
+      
+      // put the three things into the email container
+      email_container.append(sender, subject, timestamp);
+      // add event listener to the container so that if it is clicked, load the corresponding email
+      email_container.addEventListener('click', () => {
+        if (mailbox === 'sent') {
+          load_email(content.id, false);
+        } else {
+          console.log(mailbox);
+          load_email(content.id, true);
+        };
+      });
+      // append the container to the list of emails
+      email_list.append(email_container);
+    });
+  })
+  .catch(error_promise => {
+    error_promise.json().then(body => {
+      alert(body.error);
+      load_mailbox('inbox');
+    });
   });
 };
 
