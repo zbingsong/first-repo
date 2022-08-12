@@ -18,7 +18,7 @@ class Post(models.Model):
     title = models.CharField(max_length=128)
     content = models.TextField(max_length=1024)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.PositiveIntegerField(default=0)
+    likes = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return f'{self.author} said {self.title} at {self.timestamp}'
