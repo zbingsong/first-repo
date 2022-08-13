@@ -1,5 +1,3 @@
-from sqlite3 import Timestamp
-from tkinter import CASCADE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,15 +11,28 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return f'{self.username}'
 
+
 class Post(models.Model):
     author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     content = models.TextField(max_length=1024)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, blank=True, related_name='liked')
 
     def __str__(self) -> str:
-        return f'{self.author} said {self.title} at {self.timestamp}'
+        return f'{self.author} said {self.title} at {self.timestamp} (id {self.pk})'
+
+    def serialize(self, reader) -> dict:
+        return {
+            'pk': self.pk,
+            'author': self.author,
+            'title': self.title,
+            'content': self.content,
+            'timestamp': self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            'likes': self.likes.count(),
+            'if_liked': self.likes.filter(pk=reader.pk).exists()
+        }
+
 
 class Comment(models.Model):
     commenter = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
@@ -30,4 +41,4 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f'{self.commenter} commented {self.content} at {self.timestamp}'
+        return f'{self.commenter} commented {self.content} at {self.timestamp} (id {self.pk})'
