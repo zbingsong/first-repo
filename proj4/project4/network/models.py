@@ -25,12 +25,13 @@ class Post(models.Model):
     def serialize(self, reader) -> dict:
         return {
             'pk': self.pk,
-            'author': self.author,
+            'author': self.author.username,
             'title': self.title,
             'content': self.content,
             'timestamp': self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             'likes': self.likes.count(),
-            'if_liked': self.likes.filter(pk=reader.pk).exists()
+            'if_liked': self.likes.filter(pk=reader.pk).exists(),
+            'if_self_post': self.author.pk == reader.pk
         }
 
 
@@ -42,3 +43,10 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'{self.commenter} commented {self.content} at {self.timestamp} (id {self.pk})'
+
+    def serialize(self) -> dict:
+        return {
+            'commenter': self.commenter.username,
+            'content': self.content,
+            'timestamp': self.timestamp.strftime("%b %d %Y, %I:%M %p")
+        }

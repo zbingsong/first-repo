@@ -9,6 +9,7 @@
     height: 90px;
     margin-top: 10px;
     cursor: pointer;
+    border: 1px lightgrey solid;
   }
   
 #heart::before, #heart::after {

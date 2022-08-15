@@ -1,8 +1,10 @@
+from os import stat
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 
 from .models import User, Post, Comment
@@ -86,15 +88,78 @@ def register(request):
 # API that retrieves all posts, assume GET request
 def get_posts(request):
     data = Post.objects.order_by('-timestamp').all()
-    return JsonResponse({'posts' :[post.serialize(request.user) for post in data]}, safe=True)
+    return JsonResponse({'posts': [post.serialize(request.user) for post in data]}, safe=True)
 
 
+# API that gets comments of a post
+def get_comments(request, post_id):
+    comments = Comment.objects.filter(post__pk=post_id).order_by('-timestamp')
+    return JsonResponse({'comments': [comment.serialize() for comment in comments]}, safe=True)
+
+
+# API that posts a new comment
+@ensure_csrf_cookie
+def post_comment(request, post_id):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            try:
+                data = json.loads(request.body)
+                commenter = request.user
+                post = Post.objects.get(pk=post_id)
+                content = data['comment']
+                comment = Comment(commenter=commenter, post=post, content=content)
+                comment.save()
+                return JsonResponse(
+                    {
+                        'commenter': commenter, 
+                        'content': content, 
+                        'timestamp': comment.timestamp
+                    }, 
+                    status=204
+                )
+            except:
+                return JsonResponse({'error': 'Error submitting comment.'}, status=400)
+        else:
+            return JsonResponse({'error': 'You must be logged in to post a comment.'}, status=400)
+    else:
+        return JsonResponse({'error': 'POST method required.'}, status=400)
+
+
+# API that changes the number of likes 
 def put_likes(request, post_id):
     if request.method == 'PUT':
-        data = json.loads(request.body)
-        if data.get('like') is not None:
-            post = Post.objects.filter(pk=post_id)
-            post.like += data['like']
-            post.save()
-            return HttpResponse(status=204)
-    return HttpResponse(status=400)
+        if request.user.is_authenticated:
+            data = json.loads(request.body)
+            if data.get('if_liked') is not None:
+                post = Post.objects.get(pk=post_id)
+                if data['if_liked']:
+                    post.likes.get(pk=request.user.pk).delete()
+                else:
+                    post.likes.add(request.user)
+                post.save()
+                return HttpResponse(status=204)
+            else:
+                return JsonResponse({'error': '\'if_liked\' attribute cannot be empty.'}, status=400)
+        else:
+            return JsonResponse({'error': 'You must be logged in to like a post.'}, status=400)
+    else:
+        return JsonResponse({'error': 'PUT method required.'}, status=400)
+
+
+# API that updates the post content
+def edit_post(request, post_id):
+    if request.method == 'PUT':
+        if request.user.is_authenticated:
+            data = json.loads(request.body)
+            if data.get('content'):
+                post = Post.objects.get(pk=post_id)
+                content = data['content']
+                post.content = content
+                post.save()
+                return HttpResponse(status=204)
+            else:
+                return JsonResponse({'error': 'Post content cannot be empty.'}, status=400)
+        else:
+            return JsonResponse({'error': 'You must be logged in to edit a post.'}, status=400)
+    else:
+        return JsonResponse({'error': 'PUT method required.'}, status=400)
