@@ -34,6 +34,14 @@ def profile(request, user_id):
     })
 
 
+# load the Following page
+def following(request):
+    if request.user.is_authenticated:
+        return render(request, 'network/following.html')
+    else:
+        return login_view(request)
+
+
 def login_view(request):
     if request.method == "POST":
 
@@ -86,22 +94,6 @@ def register(request):
         return render(request, "network/register.html")
 
 
-# # API that retrieves the n-th to (n+10)-th posts, assume GET request
-# def get_posts(request):
-#     start = int(request.GET.get('start', 0))
-#     end = start + 10
-#     data = Post.objects.order_by('-timestamp').all()
-#     if len(data) < end-1:
-#         return JsonResponse({
-#             'posts': data[start:],
-#             'if_end': True
-#         })
-#     else:
-#         return JsonResponse({
-#             'posts': data[start:end],
-#             'if_end': False
-#         })
-
 # API that retrieves all posts, assume GET request
 def get_posts(request):
     if request.method == 'GET':
@@ -112,6 +104,7 @@ def get_posts(request):
 
 
 # API that allows user to submit a new post
+@ensure_csrf_cookie
 def post_post(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -247,3 +240,15 @@ def change_follow(request, user_id):
             return JsonResponse({'error': 'You must be logged in to follow or unfollow a user.'}, status=400)
     else:
         return JsonResponse({'error': 'PUT method required.'}, status=400)
+
+
+# API that loads the posts from the users that request.user follows
+def get_following_posts(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            data = Post.objects.filter(author__in=request.user.following).order_by('-timestamp').all()
+            return JsonResponse({'posts': [post.serialize(request.user) for post in data]}, safe=True, status=204)
+        else:
+            return JsonResponse({'error': 'You must be logged in.'}, status=400)
+    else:
+        return JsonResponse({'error': 'GET method required.'}, status=400)

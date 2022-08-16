@@ -15,6 +15,9 @@ urlpatterns = [
     path('load_profile/<str:user_id>', views.load_profile, name='load_profile'),
     path('change_follow/<str:user_id>', views.change_follow, name='change_follow'),
 
+    path('following', views.following, name='following'),
+    path('get_following_posts', views.get_following_posts, name='get_following_posts'),
+
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register")
