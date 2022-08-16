@@ -8,12 +8,11 @@
     <div class="container border p-4" id="new-post">
         <h3>New Post</h3>
         <form id="new-post-form" method="post">
-            {% csrf_token %}
             <div class="form-group">
-                <input type="text" name="new-post-title" class="form-control" placeholder="Title">
+                <input type="text" id="new-post-title" class="form-control" placeholder="Title">
             </div>
             <div class="form-group">
-                <textarea name="new-post-content" class="form-control" placeholder="What's in your mid?"></textarea>
+                <textarea id="new-post-content" class="form-control" placeholder="What's in your mid?"></textarea>
             </div>
             <input class="btn btn-sm btn-primary" type="submit" value="Post">
         </form>
@@ -26,11 +25,12 @@
     <!-- When more posts are available, clicking next => load more posts
         Otherwise, display the h5 message -->
     <div class="container text-center p-3" id="load-posts">
-        <button class="btn btn-sm btn-primary" id="load-more-button">Next</button>
+        <button class="btn btn-sm btn-primary" id="load-more-button" {% if message %}style="display: none;"{% endif %}>Next</button>
         <h5 id="no-more-post" style="display: none;">You have reach the edge of the world.</h5>
     </div>
 {% endblock %}
 
 {% block script %}
+    <script src="{% static 'network/load_posts.js' %}"></script>
     <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

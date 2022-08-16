@@ -2,8 +2,23 @@
 {% load static %}
 
 {% block body %}
-    <h1 class="p-4">All Posts</h1>
-
+    {% if message %}
+        <div class="container">
+            {{ message }}
+        </div>
+    {% endif %}
+    <div class="container" id="profile-top">
+        <h2 class="p-4">{{ username }}</h2>
+        <p>
+            Following: {{ following }}
+        </p>
+        <p>
+            Followers: {{ follower }}
+        </p>
+        <button id="follow" class="btn btn-primary" style="display: none;">Follow</button>
+        <button id="unfollow" class="btn btn-primary" style="display: none;">Unfollow</button>
+    </div>
+    
     <!-- Display the user's past posts, ten at a time -->
     <div class="container border p-4" id="past-posts">
     </div>
@@ -17,5 +32,6 @@
 {% endblock %}
 
 {% block script %}
+    <script src="{% static 'network/load_posts.js' %}"></script>
     <script src="{% static 'network/profile.js' %}"></script>
 {% endblock %}
