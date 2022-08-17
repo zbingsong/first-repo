@@ -1,10 +1,10 @@
 // execution part
 document.addEventListener('DOMContentLoaded', () => {
-    // get the CSRF token from cookies
-    const csrftoken = Cookies.get('csrftoken');
     // get the username from the URL
     const path = location.pathname.split('/');
-    const username = path[-1];
+    // console.log(path);
+    const username = path[path.length-1];
+    // console.log(username);
     // fetch the posts
     fetch(`/load_profile/${username}`)
     .then(response => {
@@ -19,14 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let if_follow = data.if_follow;
         data = data.posts;
         console.log('fetch posts');
+        console.log(if_follow);
         // console.log(data);
         // load the initial ten posts
-        load_posts(0, data, csrftoken);
+        load_posts(0, data);
         // start from the 11th post
         let start = 10;
         // every time the Next button is clicked, load ten more posts and increment start
         document.querySelector('#load-more-button').onclick = () => {
-            load_posts(start, data, csrftoken);
+            load_posts(start, data);
             start += 10;
         };
 
@@ -36,7 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // decide which button to show; if if_follow === -1, show neither (default)
         if (if_follow === 1) {
             unfollow_button.style.display = 'block';
+            // follow_button.style.display = 'none';
         } else if (if_follow === 0) {
+            // unfollow_button.style.display = 'none';
             follow_button.style.display = 'block';
         };
         // define unfollow button action
@@ -60,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 error.json().then(body => {
                     console.log(body.error);
                     alert(body.error);
+                    if (error.status === 401) {
+                        location.replace('/login');
+                    };
                 })
             });
         };
@@ -84,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 error.json().then(body => {
                     console.log(body.error);
                     alert(body.error);
+                    if (error.status === 401) {
+                        location.replace('/login');
+                    };
                 })
             });
         };

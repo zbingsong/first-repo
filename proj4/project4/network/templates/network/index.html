@@ -8,6 +8,7 @@
     <div class="container border p-4" id="new-post">
         <h3>New Post</h3>
         <form id="new-post-form" method="post">
+            {% csrf_token %}
             <div class="form-group">
                 <input type="text" id="new-post-title" class="form-control" placeholder="Title">
             </div>
@@ -24,8 +25,8 @@
 
     <!-- When more posts are available, clicking next => load more posts
         Otherwise, display the h5 message -->
-    <div class="container text-center p-3" id="load-posts">
-        <button class="btn btn-sm btn-primary" id="load-more-button" {% if message %}style="display: none;"{% endif %}>Next</button>
+    <div class="container justify-content-center p-3" id="load-posts">
+        <button class="btn btn-sm btn-primary" id="load-more-button">Next</button>
         <h5 id="no-more-post" style="display: none;">You have reach the edge of the world.</h5>
     </div>
 {% endblock %}

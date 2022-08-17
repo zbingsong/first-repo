@@ -1,8 +1,5 @@
 // execution part
 document.addEventListener('DOMContentLoaded', () => {
-    // get the CSRF token from cookies
-    const csrftoken = Cookies.get('csrftoken');
-    
     // fetch the posts
     fetch('/get_following_posts')
     .then(response => {
@@ -18,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('fetch posts');
         // console.log(data);
         // load the initial ten posts
-        load_posts(0, data, csrftoken);
+        load_posts(0, data);
         // start from the 11th post
         let start = 10;
         // every time the Next button is clicked, load ten more posts and increment start
         document.querySelector('#load-more-button').onclick = () => {
-            load_posts(start, data, csrftoken);
+            load_posts(start, data);
             start += 10;
         };
         // define the new-post form action
@@ -38,9 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     fetch('post_post', {
                         method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrftoken,
-                        },
                         body: JSON.stringify({
                             title: title,
                             content: content
@@ -58,7 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         error.json().then(body => {
                             console.log(body.error);
                             alert(body.error);
-                        })
+                            if (error.status === 401) {
+                                location.replace('/login');
+                            };
+                        });
                     });
                 };
             };

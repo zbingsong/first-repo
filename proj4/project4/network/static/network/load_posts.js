@@ -1,16 +1,20 @@
 // load ten posts
-function load_posts(start, data, csrftoken) {
+function load_posts(start, data) {
     let end = start+10;
     // if not enough posts to load, only load what's left and hide the Next button
-    if (data.length <= start+10) {
+    if (data.length <= end) {
+        console.log('the end');
         end = data.length;
         document.querySelector('#no-more-post').style.display = 'block';
         document.querySelector('#load-more-button').style.display = 'none';
+    // } else {
+    //     document.querySelector('#no-more-post').style.display = 'none';
+    //     document.querySelector('#load-more-button').style.display = 'block';
     };
-    // console.log(end);
+    console.log(end);
     // load posts
     for (let i=start; i<end; i++) {
-        load_each_post(data[i], csrftoken);
+        load_each_post(data[i]);
     };
 };
 
@@ -18,7 +22,7 @@ function load_posts(start, data, csrftoken) {
 function load_each_comment(comment) {
     // create a container for a comment
     const comment_container = document.createElement('div');
-    comment_container.className = 'container';
+    comment_container.className = 'container border p-1';
     // the commenter part (bold, link to profile page)
     const comment_commenter = document.createElement('a');
     comment_commenter.className = 'container font-weight-bold';
@@ -39,7 +43,7 @@ function load_each_comment(comment) {
 };
 
 
-function load_new_comment_section(post_comments, csrftoken) {
+function load_new_comment_section(post, post_comments) {
     // create a hidden form for submitting a new comment
     const new_comment = document.createElement('div');
     new_comment.className = 'container';
@@ -61,35 +65,46 @@ function load_new_comment_section(post_comments, csrftoken) {
     // append the comment input and submit button to the form
     new_comment_form.append(new_comment_content, new_comment_submit);
     // set the action of the form
-    new_comment_form.onsubmit = () => {
+    new_comment_form.onsubmit = (event) => {
+        event.preventDefault();
         if (new_comment_content.value.trim() === '') {
             alert('Comment cannot be empty.');
         } else {
+            console.log('submit comment to server');
             fetch(`/post_comment/${post.pk}`, {
                 method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                },
                 body: JSON.stringify({
                     comment: new_comment_content.value
                 })
             })
             .then(response => {
                 if (response.ok) {
-                    return response.json()
+                    // console.log('response ok');
+                    return response.json();
                 } else {
+                    // console.log('response not ok');
+                    // console.log(`response: ${response}`);
+                    // throw new Error();
                     throw response
                 }
             })
             .then(data => {
+                // console.log(`data ${data}`);
                 // prepend this new comment to the top of comment section
                 const new_comment_container = load_each_comment(data);
                 post_comments.prepend(new_comment_container);
+                // after submission, hide the new_comment section and clear out previous comment
+                new_comment.style.display = 'none';
+                new_comment_content.value = '';
             })
             .catch(error => {
+                // console.log(error);
                 error.json().then(body => {
                     console.log(body.error);
                     alert(body.error);
+                    if (error.status === 401) {
+                        location.replace('/login');
+                    };
                 })
             });
         };
@@ -102,7 +117,7 @@ function load_new_comment_section(post_comments, csrftoken) {
 };
 
 
-function load_each_post(post, csrftoken) {
+function load_each_post(post) {
     // the container for the post
     const post_container = document.createElement('div');
     post_container.className = 'container border p-4';
@@ -112,13 +127,10 @@ function load_each_post(post, csrftoken) {
     post_title.innerHTML = post.title;
 
     // second line: author of the post, link to the author's profile page
-    const post_author_link = document.createElement('a');
-    post_author_link.className = 'container';
-    const post_author = document.createElement('small');
+    const post_author = document.createElement('a');
     post_author.innerHTML = post.author;
-    post_author.className = 'text-muted';
-    post_author_link.append(post_author);
-    post_author_link.href = `/profile/${post.author}`;
+    post_author.className = 'container font-weight-bold';
+    post_author.href = `/profile/${post.author}`;
 
     // third line: post content
     const post_content = document.createElement('div');
@@ -145,13 +157,20 @@ function load_each_post(post, csrftoken) {
     // set the display of this editing area to be none by default
     edit_post.style.display = 'none';
     // when clicks Save, send a PUT request to update the post, and change its displayed content
-    edit_post.onsubmit = () => {
+    edit_post.onsubmit = (event) => {
+        event.preventDefault();
         if (edit_textarea.value.trim() === '') {
             alert('Post content cannot be empty.');
         } else {
             // PUT the new post content to the server
+            // alert('PUT to server');
             fetch(`/edit_post/${post.pk}`, {
                 method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken')
+                },
                 body: JSON.stringify({
                     content: edit_textarea.value
                 })
@@ -160,6 +179,8 @@ function load_each_post(post, csrftoken) {
                 if (response.ok) {
                     // change displayed content
                     post_content.innerHTML = edit_textarea.value;
+                    edit_post.style.display = 'none';
+                    post_content.style.display = 'block';
                 } else {
                     throw response;
                 };
@@ -168,7 +189,10 @@ function load_each_post(post, csrftoken) {
                 error.json().then(body => {
                     console.log(body.error),
                     alert(body.error);
-                })
+                    if (error.status === 401) {
+                        location.replace('/login');
+                    };
+                });
             });
         };
     };
@@ -182,9 +206,9 @@ function load_each_post(post, csrftoken) {
     const post_likes = document.createElement('div');
     post_likes.className = 'container';
     // like button
-    const like_button = document.createElement('button');
-    like_button.className = 'heart';
-    like_button.style.color = post.if_liked ? 'red' : 'white';
+    const like_button = document.createElement('i');
+    like_button.className = "fa fa-heart";
+    like_button.style.color = post.if_liked ? 'red' : 'lightgrey';
     // number of likes
     const likes_num = document.createElement('span');
     likes_num.innerHTML = parseInt(post.likes);
@@ -193,6 +217,11 @@ function load_each_post(post, csrftoken) {
     like_button.onclick = () => {
         fetch(`/put_likes/${post.pk}`, {
             method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': Cookies.get('csrftoken')
+            },
             body: JSON.stringify({
                 if_liked: post.if_liked
             })
@@ -215,12 +244,16 @@ function load_each_post(post, csrftoken) {
                 throw response
             };
         })
-        .catch(error => {
+        .catch(error => {console.log(error);
             error.json().then(body => {
                 console.log(body.error);
                 alert(body.error);
-            })
+                if (error.status === 401) {
+                    location.replace('/login');
+                };
+            });
         });
+        return false;
     };
     // put the button and number of likes into the container
     post_likes.append(like_button, likes_num);
@@ -242,12 +275,9 @@ function load_each_post(post, csrftoken) {
     }
     edit_comment.append(comment_button, edit_button);
 
-    // create a hidden section for posting new comments, put it between comment button and previous comments
-    const new_comment = load_new_comment_section(post_comments, csrftoken);
-
     // extra section: load previous comments
     const post_comments = document.createElement('div');
-    post_comments.className = 'container border p-2';
+    post_comments.className = 'container';
     // load all comments for this post
     fetch(`/get_comments/${post.pk}`)
     .then(response => {
@@ -257,7 +287,7 @@ function load_each_post(post, csrftoken) {
             throw new Error(`Fetch GET comments of post ${post.pk} failed`)
         };
     })
-    .then(data => data.forEach(comment => {
+    .then(data => data.comments.forEach(comment => {
         // load each comment
         const comment_container = load_each_comment(comment);
         post_comments.append(comment_container);
@@ -267,13 +297,18 @@ function load_each_post(post, csrftoken) {
         alert(error);
     });
 
+    // create a hidden section for posting new comments, put it between comment button and previous comments
+    const new_comment = load_new_comment_section(post, post_comments);
+
     // comment_button action
     comment_button.onclick = () => {
         // toggle between showing and hiding the new_comment section
         if (new_comment.style.display === 'none') {
-            new_comment.style.display === 'block';
+            // console.log('show new comment input');
+            new_comment.style.display = 'block';
         } else {
-            new_comment.style.display === 'none';
+            console.log('hide new comment input');
+            new_comment.style.display = 'none';
         }
     };
 
@@ -281,11 +316,13 @@ function load_each_post(post, csrftoken) {
     edit_button.onclick = () => {
         // toggle between content of post and textarea repopulated with post content
         if (edit_post.style.display === 'none') {
-            edit_post.style.display === 'block';
-            post_content.style.display === 'none';
+            console.log('show editing post');
+            edit_post.style.display = 'block';
+            post_content.style.display = 'none';
         } else {
-            edit_post.style.display === 'none';
-            post_content.style.display === 'block';
+            console.log('hide editing post');
+            edit_post.style.display = 'none';
+            post_content.style.display = 'block';
         }
     };
 
