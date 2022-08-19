@@ -19,6 +19,9 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, blank=True, related_name='liked')
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def __str__(self) -> str:
         return f'{self.author} said {self.title} at {self.timestamp} (id {self.pk})'
 
@@ -29,6 +32,9 @@ class Comment(models.Model):
     content = models.TextField(max_length=256)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def __str__(self) -> str:
         return f'{self.commenter} commented {self.content} at {self.timestamp} (id {self.pk})'
 
@@ -36,5 +42,5 @@ class Comment(models.Model):
         return {
             'commenter': self.commenter.username,
             'content': self.content,
-            'timestamp': self.timestamp.strftime("%m %d %Y, %I:%M %p")
+            'timestamp': self.timestamp.strftime("%m/%d/%Y, %I:%M %p")
         }

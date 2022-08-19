@@ -1,13 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => load_index);
-
-
-function load_posts() {
+document.addEventListener('DOMContentLoaded', () => {
     // Edit button action
     document.querySelectorAll('.edit-post-button').forEach(button => button.onclick = () => {
+        console.log('Edit button clicked');
         const post_id = button.dataset.postid;
         const post_content = document.querySelector(`#post-content-${post_id}`);
         const edit_post = document.querySelector(`#edit-post-${post_id}`);
-        if (edit_post.style.display === 'none') {
+        if (getComputedStyle(edit_post).display === 'none') {
             edit_post.style.display = 'block';
             post_content.style.display = 'none';
         } else {
@@ -20,13 +18,17 @@ function load_posts() {
     document.querySelectorAll('.edit-post').forEach(form => form.onsubmit = (event) => {
         event.preventDefault();
         const post_id = form.dataset.edit;
-        const content = document.querySelector(`#edit-post-${post_id}`).value;
+        const content = form.elements["content"].value;
         if (content === '') {
             alert('Post content cannot be empty');
         } else {
             fetch(`/edit_post/${post_id}`, {
                 method: 'PUT',
                 credentials: 'include',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken')
+                },
                 body: JSON.stringify({
                     'content': content
                 })
@@ -52,11 +54,14 @@ function load_posts() {
     document.querySelectorAll('.comment-button').forEach(button => button.onclick = () => {
         const post_id = button.dataset.postid;
         const new_comment = document.querySelector(`#new-comment-${post_id}`);
+        console.log(`Comment button clicked, id=${post_id}`);
         // const past_comments = document.querySelector(`#past-comments-${post_id}`);
-        if (new_comment.style.display === 'none') {
+        if (getComputedStyle(new_comment).display === 'none') {
+            console.log('change new-comment display to block');
             new_comment.style.display = 'block';
             // past_comments.style.display = 'block';
         } else {
+            console.log('change new-comment display to none');
             new_comment.style.display = 'none';
             // past_comments.style.display = 'none';
         };
@@ -66,13 +71,17 @@ function load_posts() {
     document.querySelectorAll('.new-comment').forEach(form => form.onsubmit = (event) => {
         event.preventDefault();
         const post_id = form.dataset.comment;
-        const content = document.querySelector(`#new-comment-input-${post_id}`).value;
+        const content = document.querySelector(`#new-comment-input-${post_id}`).value.trim();
         if (content === '') {
             alert('Comment cannot be empty.');
         } else {
             fetch(`/post_comment/${post_id}`, {
                 method: 'POST',
                 credentials: 'include',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken')
+                },
                 body: JSON.stringify({
                     'content': content
                 })
@@ -86,24 +95,28 @@ function load_posts() {
                 }
             })
             .then(data => {
+                // create a new div for the new comment and prepend it to #past-comments
                 const new_comment_container = document.createElement('div');
                 new_comment_container.className = 'container border p-1';
 
                 const new_comment_commenter = document.createElement('a');
                 new_comment_commenter.innerHTML = data.commenter;
                 new_comment_commenter.className = 'font-weight-bold';
-                new_comment_commenter.href = `/profile/${commenter}`;
+                new_comment_commenter.href = `/profile/${data.commenter}`;
 
                 const new_comment_content = document.createElement('div');
                 new_comment_content.innerHTML = content;
                 new_comment_content.className = 'container';
 
                 const new_comment_timestamp = document.createElement('div');
-                new_comment_timestamp = data.timestamp;
+                new_comment_timestamp.innerHTML = data.timestamp;
                 new_comment_timestamp.className = 'container text-muted';
 
                 new_comment_container.append(new_comment_commenter, new_comment_content, new_comment_timestamp);
                 document.querySelector(`#past-comments-${post_id}`).prepend(new_comment_container);
+
+                // clear out the new-comment input field
+                document.querySelector(`#new-comment-input-${post_id}`).value = '';
             })
             .catch(error => {
                 console.log(error);
@@ -116,6 +129,7 @@ function load_posts() {
     document.querySelectorAll('.fa-heart').forEach(button => button.onclick = () => {
         const post_id = button.dataset.postid;
         const if_liked = parseInt(button.dataset.ifliked);
+        console.log(if_liked);
         fetch(`/put_likes/${post_id}`, {
             method: 'PUT',
             credentials: 'include',
@@ -129,6 +143,9 @@ function load_posts() {
         })
         .then(response => {
             if (response.ok) {
+                const like_num = document.querySelector(`#like-number-${post_id}`)
+                const likes = parseInt(like_num.innerHTML);
+                like_num.innerHTML = likes - if_liked;
                 button.dataset.ifliked = -if_liked;
             } else {
                 throw response;
@@ -139,40 +156,59 @@ function load_posts() {
             error.json().then(body => alert(body.error));
         });
     });
-};
 
-
-function load_index() {
-    load_posts();
-
-    const new_post = document.querySelector('#mew-post-form');
+    // create a new post
+    const new_post = document.querySelector('#new-post-form');
+    // console.log(new_post);
     if (new_post !== null) {
-        fetch('post_post', {
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify({
-                'title': document.querySelector('#new-post-title').value,
-                'content': document.querySelector('#new-post-content').value
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload();
+        new_post.onsubmit = () => {
+            // console.log('attempt to submit new post')
+            const title = document.querySelector('#new-post-title').value.trim();
+            const content = document.querySelector('#new-post-content').value.trim();
+            console.log(content);
+            if (title === '') {
+                alert('Post title cannot be empty.');
+            } else if (content === '') {
+                alert('Post content cannot be empty.');
             } else {
-                throw response;
+                console.log('submitting a new post');
+                fetch('post_post', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRFToken': Cookies.get('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        'title': title,
+                        'content': content
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('new post successfully submitted');
+                        location.reload();
+                    } else {
+                        console.log('error in submitting new post');
+                        throw response;
+                    };
+                })
+                .catch(error => {
+                    console.log(error);
+                    error.json().then(body => alert(body.error));
+                });
             };
-        })
-        .catch(error => {
-            console.log(error);
-            error.json().then(body => alert(body.error));
-        });
+            return false;
+        };
     };
 
+    // Follow and Unfollow buttons
     const follow_button = document.querySelector('#follow-button');
     const unfollow_button = document.querySelector('#unfollow-button');
     if (follow_button !== null) {
         follow_button.onclick = () => {
-            fetch(`/change_follow/${follow_button.dataset.username}`, {
+            const username = follow_button.dataset.username;
+            fetch(`/change_follow/${username}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
@@ -186,7 +222,11 @@ function load_index() {
             })
             .then(response => {
                 if (response.ok) {
-                    // TODO
+                    follow_button.style.display = 'none';
+                    unfollow_button.style.display = 'block';
+                    const following = document.querySelector('#following-num');
+                    const following_num = parseInt(following.innerHTML) + 1;
+                    following.innerHTML = following_num;
                 } else {
                     throw response
                 };
@@ -196,9 +236,10 @@ function load_index() {
                 error.json().then(body => alert(body.error));
             });
         };
-    } else if (unfollow_button !== null) {
+
         unfollow_button.onclick = () => {
-            fetch(`/change_follow/${unfollow_button.dataset.username}`, {
+            const username = unfollow_button.dataset.username;
+            fetch(`/change_follow/${username}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
@@ -212,7 +253,11 @@ function load_index() {
             })
             .then(response => {
                 if (response.ok) {
-                    // TODO
+                    follow_button.style.display = 'block';
+                    unfollow_button.style.display = 'none';
+                    const following = document.querySelector('#following-num');
+                    const following_num = parseInt(following.innerHTML) - 1;
+                    following.innerHTML = following_num;
                 } else {
                     throw response
                 };
@@ -223,4 +268,4 @@ function load_index() {
             });
         };
     };
-};
+});

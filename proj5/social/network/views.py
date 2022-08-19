@@ -26,14 +26,14 @@ def profile(request, user_id):
     except:
         return render(request, 'network/profile.html', {
             'message': 'No such user exists.',
-            'user': True
+            'profile': True
         })
 
 
 # load the Following page
 def following(request):
     if request.user.is_authenticated:
-        posts = Post.objects.filter(author__in=request.user.following).annotate(likes_num=Count('likes')).order_by('-timestamp').all()
+        posts = Post.objects.filter(author__in=request.user.following.all()).annotate(likes_num=Count('likes')).order_by('-timestamp').all()
         return get_page(request, posts, 'following', None)
     else:
         return login_view(request)
@@ -48,7 +48,7 @@ def get_page(request, posts, page_type, user):
     page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html", {
         'type': page_type,
-        'user': user,
+        'profile': user,
         'page_num': page_number,
         'total_page': range(1, paginator.num_pages+1),
         'page_obj': page_obj
@@ -109,16 +109,18 @@ def register(request):
 
 # API that allows user to submit a new post
 def post_post(request):
-    try:
-        data = request.POST['new-post']
-        title = data['title']
-        content = data['content']
-        post = Post(author=request.user, title=title, content=content)
-        post.save()
-        return HttpResponse(status=201)
-    except:
-        return JsonResponse({'error': 'Error submitting post.'}, status=400)
-
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            title = data['title']
+            content = data['content']
+            post = Post(author=request.user, title=title, content=content)
+            post.save()
+            return HttpResponse(status=201)
+        except:
+            return JsonResponse({'error': 'Error submitting post.'}, status=400)
+    else:
+        return JsonResponse({'error': 'POST method required.'}, status=400)
 
 # API that posts a new comment
 def post_comment(request, post_id):
@@ -128,7 +130,7 @@ def post_comment(request, post_id):
                 data = json.loads(request.body)
                 commenter = request.user
                 post = Post.objects.get(pk=post_id)
-                content = data['comment']
+                content = data['content']
                 comment = Comment(commenter=commenter, post=post, content=content)
                 comment.save()
                 return JsonResponse(comment.serialize(), status=201)
@@ -186,8 +188,8 @@ def change_follow(request, user_id):
         if request.user.is_authenticated:
             data = json.loads(request.body)
             user = User.objects.get(pk=user_id)
-            if data.get('if_follow') is not None:
-                if data['if_follow']:
+            if data.get('if_following') is not None:
+                if data['if_following']:
                     # currently following, need to stop following
                     request.user.following.remove(user)
                 else:

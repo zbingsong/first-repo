@@ -18,3 +18,21 @@
 #past-posts .fa-heart[data-ifliked='-1'] {
     color: lightgrey;
 }
+
+#new-post {
+    margin-bottom: 20px;
+}
+
+#user-profile {
+    margin-bottom: 20px;
+}
+
+textarea {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.post-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+}

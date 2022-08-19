@@ -2,22 +2,20 @@
 {% load static %}
 
 {% block body %}
+
     <!-- profile page -->
-    {% if user %}
-        <div class="container border p-4" id="user-profile">\
+    {% if profile %}
+        <div class="container" id="user-profile">
             <!-- if user does not exist, views.py returns a message; display it -->
             {% if message %}
                 <h3>{{ message }}</h3>
             {% else %}
-                <h2 class="p-4">{{ user.username }}</h2>
-                <p>Following: {{user.following.all.count }}</p>
-                <p>Followers: {{user.followers.all.count }}</p>
-                {% if request.user.is_authenticated and user.username != request.user.username %}
-                    {% if user in request.user.following %}
-                        <button class="btn btn-sm btn-primary" id="unfollow-button" data-username="{{ user.username }}">Unfollow</button>
-                    {% else %}
-                        <button class="btn btn-sm btn-primary" id="follow-button" data-username="{{ user.username }}">Follow</button>
-                    {% endif %}
+                <h2 class="p-4">{{ profile.username }}</h2>
+                <p>Following: <span id="following-num">{{profile.following.all.count }}</span></p>
+                <p>Followers: <span id="followers-num">{{profile.followers.all.count }}</span></p>
+                {% if request.user.is_authenticated and profile.username != request.user.username %}
+                    <button class="btn btn-sm btn-primary" id="unfollow-button" data-username="{{ profile.username }}" {% if profile not in request.user.following.all %}style="display: none;"{% endif %}>Unfollow</button>
+                    <button class="btn btn-sm btn-primary" id="follow-button" data-username="{{ profile.username }}" {% if profile in request.user.following.all %}style="display: none;"{% endif %}>Follow</button>
                 {% endif %}
             {% endif %}
         </div>
@@ -28,10 +26,9 @@
 
             {% if request.user.is_authenticated %}
                 <!-- Make new posts -->
-                <div class="container border p-4" id="new-post">
+                <div class="container justify-content-center" id="new-post">
                     <h3>New Post</h3>
                     <form id="new-post-form" method="post">
-                        {% csrf_token %}
                         <div class="form-group">
                             <input type="text" id="new-post-title" class="form-control" placeholder="Title">
                         </div>
@@ -59,23 +56,23 @@
                     {{ post.author.username }}
                 </a>
 
-                <div class="container content post-content" id="post-content-{{ post.pk }}">
+                <div class="container post-content" id="post-content-{{ post.pk }}">
                     {{ post.content }}
                 </div>
 
-                <form class="edit-post" method="put" data-edit="{{ post.pk }}">
-                    {% csrf_token %}
-                    <textarea class="form-control" id="edit-post-{{ post.pk }}" value="{{ post.content }}"></textarea>
+                <form class="edit-post" method="put" id="edit-post-{{ post.pk }}" data-edit="{{ post.pk }}">
+                    <textarea class="form-control" name="content">{{ post.content }}</textarea>
                     <input type="submit" class="btn btn-sm btn-primary" value="Save">
                 </form>
 
                 <div class="container text-muted">
-                    {{ post.timestamp|date:"m d Y, h:i A" }}
+                    {{ post.timestamp|date:"m/d/Y, h:i A" }}
                 </div>
 
+                <!-- Like button and number of likes -->
                 <div class="container">
-                    <i class="fa fa-heart" data-postid="{{ post.pk }}" data-ifliked="{% request.user in post.likes %}1{% else %} -1{% endif %}"></i>
-                    <span class="text-muted">{{ post.likes_num }}</span>
+                    <i class="fa fa-heart" data-postid="{{ post.pk }}" data-ifliked="{% if request.user in post.likes.all %}1{% else %}-1{% endif %}"></i>
+                    <span class="text-muted" id="like-number-{{ post.pk }}">{{ post.likes_num }}</span>
                 </div>
 
                 <div class="container">
@@ -87,27 +84,28 @@
 
                 <div class="container new-comment" data-comment="{{ post.pk }}" id="new-comment-{{ post.pk }}">
                     <form method="post">
-                        {% csrf_token %}
-                        <input type="text" name="new-comment" id="new-comment-input-{{ post.pk }}" placeholder="Comment Here...">
+                        <input type="text" class="form-control" id="new-comment-input-{{ post.pk }}" placeholder="Comment Here...">
                         <input class="btn btn-sm btn-primary" type="submit" value="Post">
                     </form>
                 </div>
 
                 <div class="container past-comments" id="past-comments-{{ post.pk }}">
-                    {% for comment in post.post_comment %}
+                    {% for comment in post.post_comment.all %}
                         <div class="container border p-1">
                             <a class="font-weight-bold" href="{% url 'profile' user_id=comment.commenter.username %}">{{ comment.commenter.username }}</a>
                             <div class="container">
                                 {{ comment.content }}
                             </div>
                             <div class="container text-muted">
-                                {{ comment.timestamp|date:"m d Y, h:i A" }}
+                                {{ comment.timestamp|date:"m/d/Y, h:i A" }}
                             </div>
                         </div>
                     {% endfor %}
                 </div>
 
             </div>
+        {% empty %}
+            <h4>There are no posts at this time.</h4>
         {% endfor %}
     </div>
 
