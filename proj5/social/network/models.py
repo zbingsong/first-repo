@@ -22,18 +22,6 @@ class Post(models.Model):
     def __str__(self) -> str:
         return f'{self.author} said {self.title} at {self.timestamp} (id {self.pk})'
 
-    def serialize(self, reader) -> dict:
-        return {
-            'pk': self.pk,
-            'author': self.author.username,
-            'title': self.title,
-            'content': self.content,
-            'timestamp': self.timestamp.strftime("%b %d %Y, %I:%M %p"),
-            'likes': self.likes.count(),
-            'if_liked': self.likes.filter(pk=reader.pk).exists(),
-            'if_self_post': self.author.pk == reader.pk
-        }
-
 
 class Comment(models.Model):
     commenter = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
@@ -48,6 +36,5 @@ class Comment(models.Model):
         return {
             'commenter': self.commenter.username,
             'content': self.content,
-            'timestamp': self.timestamp.strftime("%b %d %Y, %I:%M %p")
+            'timestamp': self.timestamp.strftime("%m %d %Y, %I:%M %p")
         }
-

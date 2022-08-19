@@ -2,35 +2,150 @@
 {% load static %}
 
 {% block body %}
-    <h1 class="p-4">All Posts</h1>
-    
-    <!-- Make new posts -->
-    <div class="container border p-4" id="new-post">
-        <h3>New Post</h3>
-        <form id="new-post-form" method="post">
-            <div class="form-group">
-                <input type="text" id="new-post-title" class="form-control" placeholder="Title">
-            </div>
-            <div class="form-group">
-                <textarea id="new-post-content" class="form-control" placeholder="What's in your mid?"></textarea>
-            </div>
-            <input class="btn btn-sm btn-primary" type="submit" value="Post">
-        </form>
-    </div>
+    <!-- profile page -->
+    {% if user %}
+        <div class="container border p-4" id="user-profile">\
+            <!-- if user does not exist, views.py returns a message; display it -->
+            {% if message %}
+                <h3>{{ message }}</h3>
+            {% else %}
+                <h2 class="p-4">{{ user.username }}</h2>
+                <p>Following: {{user.following.all.count }}</p>
+                <p>Followers: {{user.followers.all.count }}</p>
+                {% if request.user.is_authenticated and user.username != request.user.username %}
+                    {% if user in request.user.following %}
+                        <button class="btn btn-sm btn-primary" id="unfollow-button" data-username="{{ user.username }}">Unfollow</button>
+                    {% else %}
+                        <button class="btn btn-sm btn-primary" id="follow-button" data-username="{{ user.username }}">Follow</button>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+
+    {% else %}
+        {% if type == "index" %}
+            <h2 class="p-4">All Posts</h2>
+
+            {% if request.user.is_authenticated %}
+                <!-- Make new posts -->
+                <div class="container border p-4" id="new-post">
+                    <h3>New Post</h3>
+                    <form id="new-post-form" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" id="new-post-title" class="form-control" placeholder="Title">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="new-post-content" class="form-control" placeholder="What's in your mid?"></textarea>
+                        </div>
+                        <input class="btn btn-sm btn-primary" type="submit" value="Post">
+                    </form>
+                </div>
+            {% endif %}
+        {% else %}
+            <h2 class="p-4">Posts from Following</h2>
+        {% endif %}
+
+    {% endif %}
 
     <!-- Display past posts, ten at a time -->
     <div class="container" id="past-posts">
+        {% for post in page_obj.object_list %}
+            <div class="container border p-4">
+
+                <h5>{{ post.title }}</h5>
+
+                <a class="font-weight-bold" href="{% url 'profile' user_id=post.author.username %}">
+                    {{ post.author.username }}
+                </a>
+
+                <div class="container content post-content" id="post-content-{{ post.pk }}">
+                    {{ post.content }}
+                </div>
+
+                <form class="edit-post" method="put" data-edit="{{ post.pk }}">
+                    {% csrf_token %}
+                    <textarea class="form-control" id="edit-post-{{ post.pk }}" value="{{ post.content }}"></textarea>
+                    <input type="submit" class="btn btn-sm btn-primary" value="Save">
+                </form>
+
+                <div class="container text-muted">
+                    {{ post.timestamp|date:"m d Y, h:i A" }}
+                </div>
+
+                <div class="container">
+                    <i class="fa fa-heart" data-postid="{{ post.pk }}" data-ifliked="{% request.user in post.likes %}1{% else %} -1{% endif %}"></i>
+                    <span class="text-muted">{{ post.likes_num }}</span>
+                </div>
+
+                <div class="container">
+                    <button class="btn btn-link comment-button" data-postid="{{ post.pk }}">Comment</button>
+                    {% if post.author.username == request.user.username %}
+                        <button class="btn btn-link edit-post-button" data-postid="{{ post.pk }}">Edit</button>
+                    {% endif %}
+                </div>
+
+                <div class="container new-comment" data-comment="{{ post.pk }}" id="new-comment-{{ post.pk }}">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="text" name="new-comment" id="new-comment-input-{{ post.pk }}" placeholder="Comment Here...">
+                        <input class="btn btn-sm btn-primary" type="submit" value="Post">
+                    </form>
+                </div>
+
+                <div class="container past-comments" id="past-comments-{{ post.pk }}">
+                    {% for comment in post.post_comment %}
+                        <div class="container border p-1">
+                            <a class="font-weight-bold" href="{% url 'profile' user_id=comment.commenter.username %}">{{ comment.commenter.username }}</a>
+                            <div class="container">
+                                {{ comment.content }}
+                            </div>
+                            <div class="container text-muted">
+                                {{ comment.timestamp|date:"m d Y, h:i A" }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        {% endfor %}
     </div>
 
-    <!-- When more posts are available, clicking next => load more posts
-        Otherwise, display the h5 message -->
-    <div class="container text-center p-3" id="load-posts">
-        <button class="btn btn-sm btn-primary" id="load-more-button" {% if message %}style="display: none;"{% endif %}>Next</button>
-        <h5 id="no-more-post" style="display: none;">You have reach the edge of the world.</h5>
-    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for page in total_page %}
+                {% if page == page_num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page }}<span class="sr-only">(current)</span></span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+      </nav>
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/load_posts.js' %}"></script>
     <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

@@ -1,35 +1,20 @@
-#load-posts {
-    text-align: center;
+#past-posts .content {
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-/* for heart-shaped like button */
-#heart {
-    position: relative;
-    width: 100px;
-    height: 90px;
-    margin-top: 10px;
-    cursor: pointer;
-    border: 1px lightgrey solid;
-  }
-  
-#heart::before, #heart::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 52px;
-  height: 80px;
-  border-radius: 50px 50px 0 0;
-  background: red;
+#past-posts .edit-post {
+    display: none;
 }
 
-#heart::before {
-  left: 50px;
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
+#past-posts .new-comment {
+    display: none;
 }
 
-#heart::after {
-  left: 0;
-  transform: rotate(45deg);
-  transform-origin: 100% 100%;
+#past-posts .fa-heart[data-ifliked='1'] {
+    color: red;
+}
+
+#past-posts .fa-heart[data-ifliked='-1'] {
+    color: lightgrey;
 }
