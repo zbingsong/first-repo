@@ -42,7 +42,7 @@ def following(request):
 def get_page(request, posts, page_type, user):
     paginator = Paginator(posts, 10)
     if request.GET.get('page') is not None:
-        page_number = request.GET.get('page')
+        page_number = int(request.GET.get('page'))
     else:
         page_number = 1
     page_obj = paginator.get_page(page_number)

@@ -48,23 +48,27 @@
     <!-- Display past posts, ten at a time -->
     <div class="container" id="past-posts">
         {% for post in page_obj.object_list %}
-            <div class="container border p-4">
+            <div class="container border p-4 past-post">
 
+                <!-- post title -->
                 <h5>{{ post.title }}</h5>
 
+                <!-- post author, links to the author's profile page -->
                 <a class="font-weight-bold" href="{% url 'profile' user_id=post.author.username %}">
                     {{ post.author.username }}
                 </a>
 
-                <div class="container post-content" id="post-content-{{ post.pk }}">
-                    {{ post.content }}
-                </div>
+                <!-- post content -->
+                <div class="container post-content" id="post-content-{{ post.pk }}">{{ post.content }}</div>
+                <br>
 
+                <!-- a form for editing post if request.user is the author, hidden by default -->
                 <form class="edit-post" method="put" id="edit-post-{{ post.pk }}" data-edit="{{ post.pk }}">
                     <textarea class="form-control" name="content">{{ post.content }}</textarea>
                     <input type="submit" class="btn btn-sm btn-primary" value="Save">
                 </form>
 
+                <!-- post timestamp -->
                 <div class="container text-muted">
                     {{ post.timestamp|date:"m/d/Y, h:i A" }}
                 </div>
@@ -75,6 +79,7 @@
                     <span class="text-muted" id="like-number-{{ post.pk }}">{{ post.likes_num }}</span>
                 </div>
 
+                <!-- Comment and Edit buttons -->
                 <div class="container">
                     <button class="btn btn-link comment-button" data-postid="{{ post.pk }}">Comment</button>
                     {% if post.author.username == request.user.username %}
@@ -82,6 +87,7 @@
                     {% endif %}
                 </div>
 
+                <!-- form for posting a new comment, hidden by default -->
                 <div class="container new-comment" data-comment="{{ post.pk }}" id="new-comment-{{ post.pk }}">
                     <form method="post">
                         <input type="text" class="form-control" id="new-comment-input-{{ post.pk }}" placeholder="Comment Here...">
@@ -89,6 +95,7 @@
                     </form>
                 </div>
 
+                <!-- show all existing comments for each post -->
                 <div class="container past-comments" id="past-comments-{{ post.pk }}">
                     {% for comment in post.post_comment.all %}
                         <div class="container border p-1">
@@ -109,8 +116,10 @@
         {% endfor %}
     </div>
 
+    <!-- navigation for pages -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
+            <!-- the Previous Page button; if on 1st page, disable it -->
             {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
@@ -120,7 +129,8 @@
                     <span class="page-link">Previous</span>
                 </li>
             {% endif %}
-
+            
+            <!-- button for each page -->
             {% for page in total_page %}
                 {% if page == page_num %}
                     <li class="page-item active">
@@ -130,7 +140,8 @@
                     <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
                 {% endif %}
             {% endfor %}
-
+            
+            <!-- the Next Page button; if on last page, disable it -->
             {% if page_obj.has_next %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
