@@ -9,10 +9,10 @@ import json
 
 from .models import User, Post, Comment
 
-# superuser account: username: bingo; pw: 7373#925362q
 
 # load the index page with all posts
 def index(request):
+    # annotate() inserts an additional row into the returned table that quickly calculates count()
     posts = Post.objects.annotate(likes_num=Count('likes')).order_by('-timestamp').all()
     return get_page(request, posts, 'index', None)
 
