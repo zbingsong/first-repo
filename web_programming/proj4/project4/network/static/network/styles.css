@@ -1,0 +1,9 @@
+#load-posts {
+    text-align: center;
+}
+
+/* for heart-shaped like button */
+.container {
+  padding: 5px;
+  gap: 5px;
+}

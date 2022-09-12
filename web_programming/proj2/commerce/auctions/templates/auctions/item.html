@@ -1,0 +1,121 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="item-listing">
+        <div class="item-image">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}">
+            {% elif item.image_upload %}
+                <img src="{{ item.image_upload.url }}">
+            {% else %}
+                <img src="/media/No_image_available.png">
+            {% endif %}
+        </div>
+
+        <div class="item-info">
+            <p>
+                <h2>{{ item.title }}</h2>
+            </p>
+            <p>
+                <h5>Categories: 
+                    <a href="{% url 'category_view' select_category=item.category%}">
+                        {{ item.category }}
+                    </a>
+                </h5>
+            </p>
+            <p>
+                Listed by: {{ item.seller.username }}
+            </p>
+            <p>
+                <h4>Current Bid: $ {{ item.price|floatformat:2 }}</h4>
+            </p>
+
+            {% if message %}
+                <p style="color: red;">
+                    {{ message }}
+                </p>
+            {% endif %}
+
+            <!-- if item is active, allow placing bid, watching, or ending the listing -->
+            {% if item.if_active %}
+                <!-- allow bidding and watching if user is not seller -->
+                {% if request.user.username != item.seller.username %}
+                    <h3>Your bid: </h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="number" name="bid" placeholder="Your Bid" min="{{ price }}" step="0.01" >
+                        <input type="submit" name="place_bid" value="Place Bid">
+                        {% if item in request.user.watching.all %}
+                            <input type="submit" name="remove_watch" value="Remove from Watch List">
+                        {% else %}
+                            <input type="submit" name="add_watch" value="Add to Watch List">
+                        {% endif %}
+                    </form>
+                <!-- allow ending the listing if user is seller -->
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="submit" name="edit_listing" value="Edit Listing">
+                        <input type="submit" name="end_listing" value="End Listing Now">
+                    </form>
+                {% endif %}
+            <!-- otherwise, say the item is no longer active -->
+            {% else %}
+                <p>
+                    <h4>The listing has ended.</h4>
+                </p>
+                <!-- if the item has at least one bid, show the buyer -->
+                {% if item.buyer %}
+                    <!-- if the current user won the auction, say so -->
+                    {% if item.buyer.username == request.user.username %}
+                        <p>You won the auction!</p>
+                    <!-- otherwise, display the winner of the auction -->
+                    {% else %}
+                        <p>The top bidder is {{ item.buyer.username }}.</p>
+                    {% endif %}
+                <!-- otherwise, the item did not sell, ask seller if want to relist -->
+                {% else %}
+                    <p>The item failed to sell.</p>
+                    {% if request.user.username == item.seller.username %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="submit" name="edit" value="Edit and Relist">
+                        </form>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            <br>
+            <p>
+                <h4>Details:</h4>
+            </p>
+            <p>
+                {{ item.description }}
+            </p>
+        </div>
+    </div>
+    
+    <br>
+
+    <!-- comment section -->
+    <div>
+        <h3>Comments:</h3>
+
+        {% for comment in item.item_comment.all %}
+            <p>
+                <h5>{{ comment.commenter.username }} said on {{ comment.created_time }}</h5>
+            </p>
+            <p style="text-indent: 10px;">
+                {{ comment.content }}
+            </p>
+        {% empty %}
+            <h5>There is no comment for this listing.</h5>
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="comment_content" placeholder="Type your comments here" style="height: 120px; width: 300px">
+            <br>
+            <input type="submit" name="comment" value="Submit Comment">
+        </form>
+    </div>
+{% endblock %}
