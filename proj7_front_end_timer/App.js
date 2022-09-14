@@ -91,26 +91,35 @@ export default class App extends React.Component {
 			if_legal_time: true,
 			if_counting: false,
 		}
+		this.setWorkTime = this.setWorkTime.bind(this)
+		this.setBreakTime = this.setBreakTime.bind(this)
+		this.startCountDown = this.startCountDown.bind(this)
+		this.pauseCountDown = this.pauseCountDown.bind(this)
+		this.resetCountDown = this.resetCountDown.bind(this)
+		this.ring = this.ring.bind(this)
 	}
 
 	setTime(time, type) {
 		if (typeof time !== "string") {
-			this.state = {
+			this.setState({
 				...this.state,
 				[type]: time,
-				curr_time: time.hour * 3600 + time.minute * 60 + time.second,
 				if_legal_time: true,
-			}
+			})
 		} else {
-			this.state = {
+			this.setState({
 				...this.state,
 				if_legal_time: false
-			}
+			})
 		}
 	}
 
 	setWorkTime(time) {
 		this.setTime(time, "work_time")
+		this.setState({
+			...this.state,
+			curr_time: time.hour * 3600 + time.minute * 60 + time.second,
+		})
 	}
 
 	setBreakTime(time) {
@@ -139,7 +148,7 @@ export default class App extends React.Component {
 	}
 
 	ring() {
-
+		vibrate()
 	}
 
 	render() {
