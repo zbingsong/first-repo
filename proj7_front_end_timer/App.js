@@ -63,11 +63,11 @@ class TimeField extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<View>
 				<input type="text" onChange={event => this.handleHourInput(event, "hour")} style={{color: this.state.color.hour}} /> : 
 				<input type="text" onChange={event => this.handleHourInput(event, "minute")} style={{color: this.state.color.hour}} /> :
 				<input type="text" onChange={event => this.handleHourInput(event, "second")} style={{color: this.state.color.hour}} />
-			</div>
+			</View>
 		)
 	}
 }
@@ -154,28 +154,34 @@ export default class App extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<div>
+				<View>
 					<Timer />
-				</div>
-				<div>
+				</View>
+				<View>
 					<Text>Work:</Text>
 					<TimeField onTimeChange={this.setWorkTime} />
-				</div>
-				<div>
+				</View>
+				<View>
 					<Text>Break: </Text>
 					<TimeField onTimeChange={this.setBreakTime} />
-				</div>
-				<div>
-					<button disabled={!this.state.if_legal_time && this.state.if_counting} onClick={() => this.startCountDown()}>
-						Start
-					</button>
-					<button disabled={!this.state.if_legal_time && !this.state.if_counting} onClick={() => this.pauseCountDown()}>
-						Pause
-					</button>
-					<button disabled={!this.state.if_legal_time} onClick={() => this.resetCountDown()}>
-						Reset
-					</button>
-				</div>
+				</View>
+				<View>
+					<Button 
+						title="Start" 
+						disabled={!this.state.if_legal_time && this.state.if_counting} 
+						onClick={() => this.startCountDown()}
+					/>
+					<Button 
+						title="Pause" 
+						disabled={!this.state.if_legal_time && !this.state.if_counting} 
+						onClick={() => this.pauseCountDown()}
+					/>
+					<Button 
+						title="Reset" 
+						disabled={!this.state.if_legal_time} 
+						onClick={() => this.resetCountDown()}
+					/>
+				</View>
 			</View>
 		)
 	}
