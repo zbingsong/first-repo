@@ -8,7 +8,8 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "runtimeVersion": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -16,11 +17,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "updates": {
+      "url": "https://u.expo.dev/96d26d88-ff7b-41b8-be6d-6a739784b518"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.bingo.pomodoro_timer"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "96d26d88-ff7b-41b8-be6d-6a739784b518"
+      }
     }
   }
 }
