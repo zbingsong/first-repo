@@ -1,7 +1,10 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, Vibration } from 'react-native'
-import TimeField from './TimeField'
+import { StyleSheet, View } from 'react-native'
+import SetTimer from './SetTimer'
+import TimerControls from './TimerControls'
 import Timer from './Timer'
+import Header from './Header'
+import Instructions from './Instructions'
 
 
 export default class Pomodoro extends React.Component {
@@ -26,6 +29,7 @@ export default class Pomodoro extends React.Component {
 			ifValidWorkTime: false,
 			ifValidBreakTime: false,
 			ifCounting: false,
+			ifSettingTime: true,
 			currCategory: 'work',
 		}
 	}
@@ -92,10 +96,12 @@ export default class Pomodoro extends React.Component {
 			}
 		}, 
 		() => {
-			if (Object.values(this.state.currTime).every(value => (value === 0))) {
+			if (this.state.currTime.hour === 0 
+				&& this.state.currTime.minute === 0
+				&& this.state.currTime.second === 0) {
 				// console.log('should vibrate')
 				clearInterval(this.interval)
-				this.props.sendNotification()
+				this.props.sendNotification(this.state.currCategory)
 				// this.switchTime()
 				// sendNotification() has a 5-second delay for unknown reason
 				setTimeout(() => {this.startCountDown(); this.switchTime()}, 5000)
@@ -121,6 +127,7 @@ export default class Pomodoro extends React.Component {
 	startCountDown = () => {
 		this.setState({
 			ifCounting: true,
+			ifSettingTime: false
 		})
 		this.interval = setInterval(this.countDown, 1000)
 	}
@@ -135,7 +142,8 @@ export default class Pomodoro extends React.Component {
 	resetCountDown = () => {
 		this.setState(prevState => ({
 			currTime: {...prevState.workTime},
-			ifCounting: false
+			ifCounting: false,
+			ifSettingTime: true
 		}))
 		clearInterval(this.interval)
 	}
@@ -143,58 +151,36 @@ export default class Pomodoro extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<View>
-					<Timer 
-						hour={this.state.currTime.hour} 
-						minute={this.state.currTime.minute} 
-						second={this.state.currTime.second} 
-					/>
-				</View>
-				<View style={styles.timeInputContainer}>
-					<Text style={styles.timeInputLabel}>Work:</Text>
-					<TimeField 
-						ifCounting = {this.state.ifCounting}
-						onTimeChange={this.setWorkTime} 
-						checkIfValid={this.setIfValidWorkTime} 
-					/>
-				</View>
-				<View style={styles.timeInputContainer}>
-					<Text style={styles.timeInputLabel}>Break: </Text>
-					<TimeField 
-						ifCounting = {this.state.ifCounting} 
-						onTimeChange={this.setBreakTime} 
-						checkIfValid={this.setIfValidBreakTime} 
-					/>
-				</View>
-				<View style={styles.timerControls}>
-					<Button 
-						title='Start' 
-						disabled={
-							!this.state.ifValidWorkTime 
-							|| !this.state.ifValidBreakTime 
-							|| this.state.ifCounting
-						} 
-						onPress={this.startCountDown}
-					/>
-					<Button 
-						title='Pause' 
-						disabled={
-							!this.state.ifValidWorkTime 
-							|| !this.state.ifValidBreakTime 
-							|| !this.state.ifCounting
-						} 
-						onPress={this.pauseCountDown}
-					/>
-					<Button 
-						title='Reset' 
-						disabled={
-							!this.state.ifValidWorkTime 
-							|| !this.state.ifValidBreakTime
-						} 
-						onPress={this.resetCountDown}
-					/>
-					{/* <Button title='test' onPress={this.props.sendNotification} /> */}
-				</View>
+
+				<Header 
+					category={this.state.currCategory}
+					ifSettingTime={this.state.ifSettingTime}
+				/>
+
+				<Timer 
+					hour={this.state.currTime.hour} 
+					minute={this.state.currTime.minute} 
+					second={this.state.currTime.second} 
+				/>
+
+				<SetTimer 
+					ifSettingTime={this.state.ifSettingTime}
+					setWorkTime={this.setWorkTime}
+					setBreakTime={this.setBreakTime}
+					setIfValidWorkTime={this.setIfValidWorkTime}
+					setIfValidBreakTime={this.setIfValidBreakTime}
+				/>
+
+				<TimerControls 
+					startCountDown={this.startCountDown}
+					pauseCountDown={this.pauseCountDown}
+					resetCountDown={this.resetCountDown}
+					ifValidTime={this.state.ifValidWorkTime && this.state.ifValidBreakTime}
+					ifCounting={this.state.ifCounting}
+				/>
+
+				<Instructions />
+
 			</View>
 		)
 	}
@@ -207,20 +193,5 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		alignItems: 'center',
 		justifyContent: 'center',
-	},
-
-	timerControls: {
-		flexDirection: 'row',
-		marginTop: 20,
-	},
-
-	timeInputContainer: {
-		flexDirection: 'row',
-		marginTop: 20,
-	},
-
-	timeInputLabel: {
-		fontSize: 30,
-		width: 100,
 	}
-});
+})

@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button, Vibration } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import TimeInput from './TimeInput'
 
 
 export default class TimeField extends React.Component {
 	static propTypes = {
-		ifCounting: PropTypes.bool,
+		ifSettingTime: PropTypes.bool,
 		onTimeChange: PropTypes.func,
 		checkIfValid: PropTypes.func,
 	}
@@ -139,7 +139,7 @@ export default class TimeField extends React.Component {
 		return (
 			<View style={styles.timeInputFieldContainer}>
 				<TimeInput 
-					editable={!this.props.ifCounting}
+					editable={this.props.ifSettingTime}
 					handleInput={this.handleHourInput} 
 					inputValue={this.state.time.hour} 
 					color={this.state.color.hour} 
@@ -147,7 +147,7 @@ export default class TimeField extends React.Component {
 				/>
 				<Text style={styles.timeInputText}> : </Text>
 				<TimeInput 
-					editable={!this.props.ifCounting}
+					editable={this.props.ifSettingTime}
 					handleInput={this.handleMinuteInput} 
 					inputValue={this.state.time.minute} 
 					color={this.state.color.minute} 
@@ -155,7 +155,7 @@ export default class TimeField extends React.Component {
 				/>
 				<Text style={styles.timeInputText}> : </Text>
 				<TimeInput 
-					editable={!this.props.ifCounting}
+					editable={this.props.ifSettingTime}
 					handleInput={this.handleSecondInput} 
 					inputValue={this.state.time.second} 
 					color={this.state.color.second} 

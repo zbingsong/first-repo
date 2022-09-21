@@ -62,11 +62,11 @@ async function registerForPushNotificationsAsync() {
 }
 
 
-async function schedulePushNotification() {
+async function schedulePushNotification(status) {
     await Notifications.scheduleNotificationAsync({
         content: {
             title: "Pomodoro Timer",
-            body: 'Time is up!',
+            body: 'Time is up. ' + ((status === 'work') ? 'Take a break!' : 'Start working!')
         },
         trigger: new Date(Date.now() + 50),
     })
@@ -74,11 +74,11 @@ async function schedulePushNotification() {
 
 
 // From official doc, modified
-export default function LocalNotification() {
+const LocalNotification = () => {
     const [expoPushToken, setExpoPushToken] = useState('')
     const [notification, setNotification] = useState(false)
     const notificationListener = useRef()
-    const responseListener = useRef()
+    // const responseListener = useRef()
   
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token))
@@ -89,17 +89,19 @@ export default function LocalNotification() {
         })
     
         // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            console.log(response)
-        })
+        // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        //     console.log(response)
+        // })
     
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current)
-            Notifications.removeNotificationSubscription(responseListener.current)
+            // Notifications.removeNotificationSubscription(responseListener.current)
         }
     }, [])
 
     return (
-        <Pomodoro sendNotification={async () => {await schedulePushNotification()}} />
+        <Pomodoro sendNotification={schedulePushNotification} />
     )
 }
+
+export default LocalNotification

@@ -1,14 +1,15 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button, Vibration } from 'react-native'
+import { StyleSheet, TextInput } from 'react-native'
 import PropTypes from 'prop-types'
 
 
-export default function TimeInput(props) {
+const TimeInput = props => {
 	return (<TextInput 
 		type='text' 
 		keyboardType='numeric' 
 		value={props.inputValue} 
 		placeholder='00'
+		textAlign={'center'}
 		editable={props.editable}
 		onChangeText={props.handleInput} 
 		onEndEditing={props.onEndEditing} 
@@ -24,14 +25,17 @@ TimeInput.propTypes = {
 	onEndEditing: PropTypes.func,
 }
 
+export default TimeInput
+
 
 const styles = StyleSheet.create({
 	timeInputField: {
 		borderColor: 'black',
 		borderWidth: 1,
-		borderRadius: 2,
-		width: 50,
-		fontSize: 26,
-		paddingHorizontal: 8,
+		borderRadius: 4,
+		width: 64,
+		height: 42,
+		fontSize: 28,
+		paddingHorizontal: 6,
 	}
 });

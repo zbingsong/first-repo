@@ -3,9 +3,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 
 
-export default function Timer(props) {
+const Timer = props => {
 	return (
-		<View>
+		<View style={styles.timerContainer}>
 			<Text style={styles.timer}>
 				{
 					props.hour.toString().padStart(2, '0')
@@ -25,9 +25,16 @@ Timer.propTypes = {
 	second: PropTypes.number,
 }
 
+export default Timer
+
 
 const styles = StyleSheet.create({
 	timer: {
-		fontSize: 64,
+		fontSize: 70,
+		fontWeight: 'bold'
+	},
+
+	timerContainer: {
+		margin: 15
 	}
 });
