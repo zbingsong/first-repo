@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "project1",
+    "name": "Pomodoro Timer",
     "description": "This project is really great.",
-    "slug": "project1",
+    "slug": "timer",
     "privacy": "public",
     "platforms": [
       "ios",
