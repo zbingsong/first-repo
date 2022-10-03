@@ -1,0 +1,17 @@
+# Connect to MySQL from port 3306 (default)
+# spring.datasource.url = jdbc:mysql://localhost:3306/employee_management?useSSL=false&allowPublicKeyRetrieval=true
+# spring.datasource.username = root
+# spring.datasource.password = Pyrr0le
+
+# # Use Hibernate to manage MySQL database
+# spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
+# # Auto update database when processing requests
+# spring.jpa.hibernate.ddl-auto = update
+
+app:
+    datasource:
+        jdbc-url: jdbc:postgresql://localhost:5432/postgresdb
+        username: postgres
+        password: mysecretpassword
+        poll-size: 30
+        driver-class-name: org.postgresql.Driver
