@@ -3,7 +3,6 @@ package edu.bingo.employee.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import edu.bingo.employee.exception.ResourceNotFoundException;
@@ -15,13 +14,13 @@ import edu.bingo.employee.repository.EmployeeRepository;
 public class EmployeeService {
     
     private EmployeeRepository employeeRepository;
-    // private BCryptPasswordEncoder passwordEncoder;
+
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
-        // this.passwordEncoder = passwordEncoder;
     }
+
 
     public List<Employee> getAllEmployees() {
         return this.employeeRepository.findAll();
@@ -46,7 +45,6 @@ public class EmployeeService {
         originalEmployee.setFirstName(updatedEmployee.getFirstName());
         originalEmployee.setLastName(updatedEmployee.getLastName());
         originalEmployee.setEmailId(updatedEmployee.getEmailId());
-        originalEmployee.setPrivilegeLevel(updatedEmployee.getPrivilegeLevel());
         // Saving a Managed Employee object will update it
         return this.employeeRepository.save(originalEmployee);
     };

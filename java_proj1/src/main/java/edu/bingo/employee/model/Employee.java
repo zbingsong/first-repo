@@ -1,13 +1,21 @@
 package edu.bingo.employee.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "employee")
+@Table(name = "employee", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class Employee {
 
     @Id
@@ -30,21 +38,27 @@ public class Employee {
     // @Transient means this instance variable is not saved to database
     private String passwordConfirm;
 
-    @Column(name = "privilege_level")
-    private byte privilegeLevel;
+    // Create a M:N relationship between this table and Role table, specify references
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "employee_role", 
+        joinColumns = @JoinColumn(name = "employee_username", referencedColumnName = "username"), 
+        inverseJoinColumns = @JoinColumn(name = "role_username", referencedColumnName = "username")
+    )
+    private Set<Role> role;
+
 
     public Employee() {
-        super();
+
     }
 
-    public Employee(String username, String firstName, String lastName, String emailId, String password, byte privilegeLevel) {
-        super();
+    public Employee(String username, String password, String firstName, String lastName, String emailId) {
+
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
         this.password = password;
-        this.privilegeLevel = privilegeLevel;
     }
 
     
@@ -88,11 +102,11 @@ public class Employee {
         this.emailId = emailId;
     }
 
-    public byte getPrivilegeLevel() {
-        return this.privilegeLevel;
+    public Set<Role> getRole() {
+        return this.role;
     }
 
-    public void setPrivilegeLevel(byte level) {
-        this.privilegeLevel = level;
+    public void setRole(Set<Role> role) {
+        this.role = role;
     }
 }

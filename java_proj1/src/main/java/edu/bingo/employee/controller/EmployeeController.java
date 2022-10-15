@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,17 +25,15 @@ import edu.bingo.employee.service.SecurityService;
 @RestController
 @RequestMapping("/api/v1/employees")
 // React.js has default port of 3000
-// @CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5432")
 public class EmployeeController {
     
+    @Autowired
     private EmployeeService employeeService;
-    private SecurityService securityService;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService, SecurityService securityService) {
-        this.employeeService = employeeService;
-        this.securityService = securityService;
-    }
+    private SecurityService securityService;
+
 
     // Get all employees
     @GetMapping(path = "")
@@ -49,8 +48,12 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/login")
-    public void signEmployeeIn(@RequestBody Employee employee) {
-
+    public ResponseEntity<String> signEmployeeIn(@RequestBody Employee employee) {
+        String message = "Login failed";
+        if (this.securityService.login(employee.getUsername(), employee.getUsername())) {
+            message = "Login succeeded";
+        }
+        return new ResponseEntity<String>(message, HttpStatus.BAD_REQUEST);
     }
 
     // Get an employee by ID
