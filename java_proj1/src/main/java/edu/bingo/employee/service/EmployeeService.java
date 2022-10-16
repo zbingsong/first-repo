@@ -1,6 +1,8 @@
 package edu.bingo.employee.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,26 +15,24 @@ import edu.bingo.employee.repository.EmployeeRepository;
 @Service
 public class EmployeeService {
     
+    @Autowired
     private EmployeeRepository employeeRepository;
 
-
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    private SecurityService securityService;
 
 
     public List<Employee> getAllEmployees() {
         return this.employeeRepository.findAll();
     }
 
-    public Employee addEmployee(Employee employee) {
-        // employee.setPassword(passwordEncoder.encode(employee.getPassword()));
-        return this.employeeRepository.save(employee);
+    public Employee addEmployee(String username, String password, String firstName, String lastName, String emailId, Set<String> roles) {
+        Optional<Employee> employee = this.securityService.register(username, password, firstName, lastName, emailId, roles);
+        return employee.isPresent() ? employee.get() : null;
     }
 
     public Employee findEmployeeById(String username) {
-        Employee employee = this.employeeRepository.findById(username).orElseThrow(
+        Employee employee = this.employeeRepository.findByUsername(username).orElseThrow(
             () -> new ResourceNotFoundException("Employee not exist with username: " + username)
         );
         return employee;
