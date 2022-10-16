@@ -2,13 +2,14 @@ package edu.bingo.employee.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.bingo.employee.exception.ResourceNotFoundException;
 import edu.bingo.employee.model.Employee;
+import edu.bingo.employee.payload.EmployeeInfo;
+import edu.bingo.employee.payload.LoginEmployee;
 import edu.bingo.employee.repository.EmployeeRepository;
 
 
@@ -26,9 +27,14 @@ public class EmployeeService {
         return this.employeeRepository.findAll();
     }
 
-    public Employee addEmployee(String username, String password, String firstName, String lastName, String emailId, Set<String> roles) {
-        Optional<Employee> employee = this.securityService.register(username, password, firstName, lastName, emailId, roles);
-        return employee.isPresent() ? employee.get() : null;
+    public EmployeeInfo addEmployee(EmployeeInfo registerEmployee) {
+        Optional<EmployeeInfo> registerResponse = this.securityService.register(registerEmployee);
+        return registerResponse.isPresent() ? registerResponse.get() : null;
+    }
+
+    public EmployeeInfo logEmployeeIn(LoginEmployee loginEmployee) {
+        Optional<EmployeeInfo> loginResponse = this.securityService.login(loginEmployee);
+        return loginResponse.isPresent() ? loginResponse.get() : null;
     }
 
     public Employee findEmployeeById(String username) {

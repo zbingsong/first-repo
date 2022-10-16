@@ -3,10 +3,8 @@ package edu.bingo.employee.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,12 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.bingo.employee.model.Employee;
+import edu.bingo.employee.payload.LoginEmployee;
+import edu.bingo.employee.payload.EmployeeInfo;
 import edu.bingo.employee.service.EmployeeService;
-import edu.bingo.employee.service.SecurityService;
 
 
 @RestController
@@ -33,9 +31,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-    private SecurityService securityService;
-
 
     // Get all employees
     @GetMapping(path = "")
@@ -45,27 +40,30 @@ public class EmployeeController {
 
     // Create a new employee
     @PostMapping(path = "/add")
-    public ResponseEntity<Employee> createEmployee(@RequestParam String username, 
-        @RequestParam String password, 
-        @RequestParam String firstName, 
-        @RequestParam String lastName,
-        @RequestParam String emailId,
-        @RequestParam Set<String> roles) {
-        Employee employee = employeeService.addEmployee(username, password, firstName, lastName, emailId, roles);
-        if (employee != null) {
-            return ResponseEntity.ok().body(employee);
+    public ResponseEntity<?> createEmployee(@RequestBody EmployeeInfo registerEmployee) {
+        EmployeeInfo registerResponse = this.employeeService.addEmployee(registerEmployee);
+        if (registerResponse != null) {
+            return ResponseEntity.ok().body(registerResponse);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("Registration failed");
         }
     }
 
+
     @PostMapping(path = "/login")
-    public ResponseEntity<String> signEmployeeIn(@RequestBody Employee employee) {
-        String message = "Login failed";
-        if (this.securityService.login(employee.getUsername(), employee.getUsername())) {
-            message = "Login succeeded";
+    public ResponseEntity<?> signEmployeeIn(@RequestBody LoginEmployee loginEmployee) {
+        EmployeeInfo loginResponse = this.employeeService.logEmployeeIn(loginEmployee);
+        if (loginResponse != null) {
+            return ResponseEntity.ok().body(loginResponse);
+        } else {
+            return ResponseEntity.badRequest().body("Login failed");
         }
-        return new ResponseEntity<String>(message, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @GetMapping(path = "/logout")
+    public ResponseEntity<String> signEmployeeOut() {
+        return ResponseEntity.ok().body("Logout succeeded");
     }
 
     // Get an employee by ID
