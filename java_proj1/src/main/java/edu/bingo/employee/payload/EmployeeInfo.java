@@ -13,7 +13,7 @@ import edu.bingo.employee.model.Employee;
 import edu.bingo.employee.model.Role;
 import edu.bingo.employee.repository.RoleRepository;
 
-public class RegisterEmployee {
+public class EmployeeInfo {
 
     private String username;
 
@@ -31,11 +31,11 @@ public class RegisterEmployee {
     private RoleRepository roleRepository;
 
 
-    public RegisterEmployee() {
+    public EmployeeInfo() {
 
     }
 
-    public RegisterEmployee(String username, String password, String firstName, String lastName, String emailId, List<String> roles) {
+    public EmployeeInfo(String username, String password, String firstName, String lastName, String emailId, List<String> roles) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -62,15 +62,20 @@ public class RegisterEmployee {
                 throw new ResourceNotFoundException("Role not found");
             }
         }
+
         employee.setRole(rolesSet);
         return employee;
     }
 
-    public static RegisterEmployee toRegisterEmployee(Employee employee) {
+    public String getUsername() {
+        return this.username;
+    }
+
+    public static EmployeeInfo toEmployeeInfo(Employee employee) {
         List<String> roles = employee.getRole()
             .stream()
             .map(role -> role.getName().name())
             .collect(Collectors.toList());
-        return new RegisterEmployee(employee.getUsername(), employee.getPassword(), employee.getFirstName(), employee.getLastName(), employee.getEmailId(), roles);
+        return new EmployeeInfo(employee.getUsername(), employee.getPassword(), employee.getFirstName(), employee.getLastName(), employee.getEmailId(), roles);
     }
 }
