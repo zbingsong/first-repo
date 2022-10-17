@@ -25,7 +25,7 @@ import edu.bingo.employee.service.EmployeeService;
 @RestController
 @RequestMapping("/api/v1/employees")
 // React.js has default port of 3000
-@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3000")
 public class EmployeeController {
     
     @Autowired
@@ -39,7 +39,7 @@ public class EmployeeController {
     }
 
     // Create a new employee
-    @PostMapping(path = "/add")
+    /*@PostMapping(path = "/add")
     public ResponseEntity<?> createEmployee(@RequestBody EmployeeInfo registerEmployee) {
         EmployeeInfo registerResponse = this.employeeService.addEmployee(registerEmployee);
         if (registerResponse != null) {
@@ -49,7 +49,7 @@ public class EmployeeController {
         }
     }
 
-
+    // Log in
     @PostMapping(path = "/login")
     public ResponseEntity<?> signEmployeeIn(@RequestBody LoginEmployee loginEmployee) {
         EmployeeInfo loginResponse = this.employeeService.logEmployeeIn(loginEmployee);
@@ -60,26 +60,25 @@ public class EmployeeController {
         }
     }
 
-
+    // Log out
     @GetMapping(path = "/logout")
     public ResponseEntity<String> signEmployeeOut() {
         return ResponseEntity.ok().body("Logout succeeded");
-    }
+    }*/
 
     // Get an employee by ID
-    // ResponseEntity represents an entire HTTP response, instead of a Java object
     @GetMapping(path = "/{username}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("username") String username) {
-        Employee employee = employeeService.findEmployeeById(username);
+        Employee employee = this.employeeService.findEmployeeById(username);
         return ResponseEntity.ok(employee);
     }
 
-    // Update an employee
+    /*// Update an employee
     @PutMapping(path = "/update/{username}")
     public ResponseEntity<Employee> updateEmployeeById(@PathVariable("username") String username, @RequestBody Employee updatedEmployee) {
         Employee employee = employeeService.updateEmployeeById(username, updatedEmployee);
         return ResponseEntity.ok(employee);
-    }
+    }*/
 
     // Delete an employee
     @DeleteMapping(path = "/delete/{username}")

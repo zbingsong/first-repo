@@ -1,7 +1,5 @@
 package edu.bingo.employee.payload;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class LoginEmployee {
 
@@ -9,8 +7,6 @@ public class LoginEmployee {
 
     private String password;
 
-    @Autowired
-    PasswordEncoder encoder;
 
     public LoginEmployee() {
 

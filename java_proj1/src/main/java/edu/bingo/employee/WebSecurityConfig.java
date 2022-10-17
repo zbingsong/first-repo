@@ -8,14 +8,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import edu.bingo.employee.service.EmployeeDetailsService;
 
 @Configuration
-@EnableWebFluxSecurity
 // Require authentication on individual controller methods annotated with @PreAuthorize
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
@@ -35,8 +33,10 @@ public class WebSecurityConfig {
          * Doesn't require authentication on path "" and "/index" (home page)
          * The login page is set to "/login"
          */
-        http.authorizeHttpRequests(
-                requests -> requests.antMatchers("", "/index")
+        http
+            .csrf().disable()
+            .authorizeHttpRequests(
+                requests -> requests.antMatchers("/api/v1/employees", "/api/v1/employees/index")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -47,8 +47,9 @@ public class WebSecurityConfig {
             )
             .logout(
                 logout -> logout.permitAll()
-            );
-        
+            )
+            .httpBasic(org.springframework.security.config.Customizer.withDefaults());
+
         http.authenticationProvider(this.authenticationProvider());
 
         return http.build();

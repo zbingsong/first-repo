@@ -13,24 +13,30 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+
 
 @Entity
 @Table(name = "employee", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class Employee {
 
     @Id
-    @Column(name = "username")
+    @Column(name = "username", length = 32)
     private String username;
 
-    @Column(name = "first_name")
+    @NotBlank
+    @Column(name = "first_name", length = 32)
     private String firstName;
 
-    @Column(name = "last_name")
+    @NotBlank
+    @Column(name = "last_name", length = 32)
     private String lastName;
 
-    @Column(name = "email_id")
+    @NotBlank
+    @Column(name = "email_id", length = 128)
     private String emailId;
 
+    @NotBlank
     @Column(name = "password")
     private String password;
 
@@ -39,11 +45,12 @@ public class Employee {
     private String passwordConfirm;
 
     // Create a M:N relationship between this table and Role table, specify references
+    @NotBlank
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
         name = "employee_role", 
-        joinColumns = @JoinColumn(name = "employee_username", referencedColumnName = "username"), 
-        inverseJoinColumns = @JoinColumn(name = "role_username", referencedColumnName = "username")
+        joinColumns = @JoinColumn(name = "employee_username"), 
+        inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> role;
 
