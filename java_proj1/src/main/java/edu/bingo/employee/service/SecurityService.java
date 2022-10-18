@@ -37,6 +37,8 @@ public class SecurityService {
     public Optional<EmployeeInfo> login(LoginEmployee loginEmployee) {
         String username = loginEmployee.getUsername();
         String password = this.encoder.encode(loginEmployee.getPassword());
+
+        // If employee doesn't exist, return an empty Optional
         if (!this.employeeRepository.existsByUsername(username)) {
             return Optional.empty();
         }
@@ -50,24 +52,6 @@ public class SecurityService {
         // Retrieve and return employee's info
         Employee employee = this.employeeRepository.findByUsername(username).get();
         return Optional.of(EmployeeInfo.toEmployeeInfo(employee));
-    }
-
-
-    public void autoLogin(String username, String password) {
-        UserDetails employeeDetails = this.employeeDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(employeeDetails, password, employeeDetails.getAuthorities());
-
-        this.authenticationManager.authenticate(token);
-
-        if (token.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(token);
-        }
-    };
-
-
-    public Optional<UserDetails> getLoggedInUsername() {
-        Object employeeDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return Optional.ofNullable((UserDetails) employeeDetails);
     }
 
 

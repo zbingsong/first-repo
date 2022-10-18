@@ -20,8 +20,8 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    /*@Autowired
-    private SecurityService securityService;*/
+    @Autowired
+    private SecurityService securityService;
 
 
     // @PreAuthorize("hasRole('ADMIN')")
@@ -29,7 +29,7 @@ public class EmployeeService {
         return this.employeeRepository.findAll();
     }
 
-    /*public EmployeeInfo addEmployee(EmployeeInfo registerEmployee) {
+    public EmployeeInfo addEmployee(EmployeeInfo registerEmployee) {
         Optional<EmployeeInfo> registerResponse = this.securityService.register(registerEmployee);
         return registerResponse.isPresent() ? registerResponse.get() : null;
     }
@@ -37,7 +37,7 @@ public class EmployeeService {
     public EmployeeInfo logEmployeeIn(LoginEmployee loginEmployee) {
         Optional<EmployeeInfo> loginResponse = this.securityService.login(loginEmployee);
         return loginResponse.isPresent() ? loginResponse.get() : null;
-    }*/
+    }
 
     // @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Employee findEmployeeById(String username) {

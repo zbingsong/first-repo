@@ -39,7 +39,7 @@ public class EmployeeController {
     }
 
     // Create a new employee
-    /*@PostMapping(path = "/add")
+    @PostMapping(path = "/add")
     public ResponseEntity<?> createEmployee(@RequestBody EmployeeInfo registerEmployee) {
         EmployeeInfo registerResponse = this.employeeService.addEmployee(registerEmployee);
         if (registerResponse != null) {
@@ -64,7 +64,7 @@ public class EmployeeController {
     @GetMapping(path = "/logout")
     public ResponseEntity<String> signEmployeeOut() {
         return ResponseEntity.ok().body("Logout succeeded");
-    }*/
+    }
 
     // Get an employee by ID
     @GetMapping(path = "/{username}")
