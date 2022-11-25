@@ -14,15 +14,28 @@ export default class ResultScreen extends React.Component {
             ifResultsReady: false,
             results: [],
             page: 1,
-            maxPage: 1,
+            ifMoreAvailable: true,
         }
     }
 
-    loadMovieList = async () => {
-        // console.log(this.props);
-        const resultList = await searchForMoviesAsync(
-            this.props.route.params.title, this.props.route.params.year, page);
-        this.setState({results: resultList});
+    loadMovies = async () => {
+        // console.log('load more movies');
+        // console.log(this.state)
+        // if no more movies can be loaded, do nothing
+        if (!this.state.ifMoreAvailable) {
+            return;
+        }
+
+        // fetch more movies
+        const result = await searchForMoviesAsync(
+            this.props.route.params.title, this.props.route.params.year, this.state.page
+        );
+        // append to state.results and update state.page and state.ifMoreAvailable
+        this.setState(prevState => ({
+            results: [...prevState.results, ...result.movies],
+            page: prevState.page + 1,
+            ifMoreAvailable: result.ifMoreAvailable
+        }));
     }
 
     navigateToDetail = (imdbID) => {
@@ -34,7 +47,7 @@ export default class ResultScreen extends React.Component {
     )
 
     componentDidMount() {
-        this.loadMovieList();
+        this.loadMovies();
         this.setState({ifResultsReady: true})
     }
 
@@ -46,6 +59,9 @@ export default class ResultScreen extends React.Component {
                         renderItem={this.renderItem} 
                         ListEmptyComponent={(<Text>No movie was found.</Text>)} 
                         showsVerticalScrollIndicator={false} 
+                        // When scrolling to second last movie on screen, load more movies
+                        onEndReachedThreshold={1} 
+                        onEndReached={this.loadMovies}
                     />
                 </View>
             );
