@@ -1,7 +1,6 @@
 import { Asset } from 'expo-asset';
+import API_KEY from './APIKey.js';
 
-
-const API_KEY = '1a5689e1';
 
 const findMoviesAsync = async (imdbID) => {
     const response = await fetch(`https://www.omdbapi.com/?i=${imdbID}&plot=full&apikey=${API_KEY}&r=json`);

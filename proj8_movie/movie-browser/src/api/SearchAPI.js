@@ -1,4 +1,5 @@
-const API_KEY = '1a5689e1';
+import API_KEY from './APIKey.js';
+
 
 export default async function searchForMoviesAsync(title, year, page) {
     let response = null;
