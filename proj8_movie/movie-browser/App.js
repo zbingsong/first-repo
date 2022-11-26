@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SearchScreen from './src/components/search/SearchScreen';
 import ResultScreen from './src/components/result/ResultScreen';
 import DetailScreen from './src/components/detail/DetailScreen';
+import AdvSearchScreen from './src/components/search/AdvSearchScreen';
 
 
 const STACK = createNativeStackNavigator();
@@ -14,6 +15,7 @@ export default function App() {
         <NavigationContainer style={styles.container}>
             <STACK.Navigator initialRouteName='Search'>
                 <STACK.Screen name='Search' component={SearchScreen} />
+                <STACK.Screen name='AdvSearch' component={AdvSearchScreen} />
                 <STACK.Screen name='Result' component={ResultScreen} />
                 <STACK.Screen name='Detail' component={DetailScreen} />
             </STACK.Navigator>

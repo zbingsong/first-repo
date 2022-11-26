@@ -21,14 +21,14 @@ export default class ResultScreen extends React.Component {
     loadMovies = async () => {
         // console.log('load more movies');
         // console.log(this.state)
-        // if no more movies can be loaded, do nothing
-        if (!this.state.ifMoreAvailable) {
+        // if no more movies can be loaded or page more than 100, do nothing
+        if (!this.state.ifMoreAvailable || this.state.page > 100) {
             return;
         }
 
         // fetch more movies
         const result = await searchForMoviesAsync(
-            this.props.route.params.title, this.props.route.params.year, this.state.page
+            this.props.route.params.title, this.state.page
         );
         // append to state.results and update state.page and state.ifMoreAvailable
         this.setState(prevState => ({

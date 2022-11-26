@@ -9,7 +9,6 @@ export default class SearchScreen extends React.Component {
         super(props);
         this.state = {
             movieTitle: '',
-            movieYear: '',
         }
     }
 
@@ -18,20 +17,21 @@ export default class SearchScreen extends React.Component {
         this.setState({movieTitle: input});
     }
 
-    handleYearUpdate = input => {
-        this.setState({movieYear: input});
-    }
-
     navigateToResult = () => {
         if (this.state.movieTitle.trim() === '') {
             alert('Movie title cannot be empty');
         } else {
             // console.log(this.state.movieTitle.trim());
             this.props.navigation.navigate('Result', {
-                title: this.state.movieTitle.trim(),
-                year: this.state.movieYear.trim(),
+                title: this.state.movieTitle.trim()
             });
         }
+    }
+
+    navigateToAdvSearch = () => {
+        this.props.navigation.navigate('AdvSearch', {
+            title: this.state.movieTitle.trim()
+        });
     }
 
     render() {
@@ -40,11 +40,12 @@ export default class SearchScreen extends React.Component {
                 <SearchField title='Movie Title*' value={this.state.movieTitle} 
                     placeholder='Title' update={this.handleTitleUpdate} />
 
-                <SearchField title='Release Year' value={this.state.movieYear} 
-                    placeholder='Release year' update={this.handleYearUpdate} />
-
                 <Pressable style={styles.button} onPress={this.navigateToResult}>
                     <Text style={styles.buttonText}>Search</Text>
+                </Pressable>
+
+                <Pressable style={styles.button} onPress={this.navigateToAdvSearch}>
+                    <Text style={styles.buttonText}>Advanced Search</Text>
                 </Pressable>
             </View>
         );

@@ -1,13 +1,8 @@
 import API_KEY from './APIKey.js';
 
 
-export default async function searchForMoviesAsync(title, year, page) {
-    let response = null;
-    if (year !== '') {
-        response = await fetch(`https://www.omdbapi.com/?s=${title}&y=${year}&page=${page}&apikey=${API_KEY}&r=json`);
-    } else {
-        response = await fetch(`https://www.omdbapi.com/?s=${title}&page=${page}&apikey=${API_KEY}&r=json`);
-    }
+export default async function searchForMoviesAsync(title, page) {
+    const response = await fetch(`https://www.omdbapi.com/?s=${title}&page=${page}&apikey=${API_KEY}&r=json`);
 
     if (!response.ok) {
         alert('Failed to fetch result list.');
