@@ -2,6 +2,8 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import SearchField from "./SearchField";
 import PropTypes from 'prop-types';
+import Logo from '../../../assets/API-logo.svg';
+
 
 export default class SearchScreen extends React.Component {
 
@@ -37,16 +39,21 @@ export default class SearchScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <Logo width={300} height={250} style={styles.logo} />
+
                 <SearchField title='Movie Title*' value={this.state.movieTitle} 
                     placeholder='Title' update={this.handleTitleUpdate} />
 
-                <Pressable style={styles.button} onPress={this.navigateToResult}>
-                    <Text style={styles.buttonText}>Search</Text>
-                </Pressable>
+                <View style={styles.buttonContainer}>
+                    <Pressable style={styles.button} onPress={this.navigateToResult}>
+                        <Text style={styles.buttonText}>Search</Text>
+                    </Pressable>
 
-                <Pressable style={styles.button} onPress={this.navigateToAdvSearch}>
-                    <Text style={styles.buttonText}>Advanced Search</Text>
-                </Pressable>
+                    <Pressable style={styles.button} onPress={this.navigateToAdvSearch}>
+                        <Text style={styles.buttonText}>Advanced Search</Text>
+                    </Pressable>
+                </View>
+                
             </View>
         );
     }
@@ -66,13 +73,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    logo: {
+        marginBottom: 50,
+    },
+
     button: {
-        width: 110,
+        // width: 110,
         borderRadius: 4,
         elevation: 2,
         paddingVertical: 11,
         paddingHorizontal: 20,
-        marginVertical: 30,
+        margin: 10,
         backgroundColor: 'black',
         alignItems: 'center',
     },
@@ -83,5 +94,9 @@ const styles = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
+    },
+
+    buttonContainer: {
+        flexDirection: 'row',
     },
 });

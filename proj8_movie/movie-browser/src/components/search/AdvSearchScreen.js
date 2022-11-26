@@ -52,7 +52,7 @@ export default class AdvSearchScreen extends React.Component {
 }
 
 
-SearchScreen.propTypes = {
+AdvSearchScreen.propTypes = {
     navigation: PropTypes.object,
     route: PropTypes.object,
 }

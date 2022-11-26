@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     },
 
     textInput: {
-        width: 200,
+        width: 300,
         height: 40,
         borderWidth: 1,
         borderRadius: 4,
