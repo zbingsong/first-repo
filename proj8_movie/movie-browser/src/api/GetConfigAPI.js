@@ -11,12 +11,12 @@ export default async function getConfig() {
     }
 
     const data = await response.json();
-    const base_url = data.images.base_url;
-    const poster_sizes = data.images.poster_sizes;
-    // console.log(poster_sizes);
+    const baseUrl = data.images.base_url;
+    const posterSizes = data.images.poster_sizes;
+    // console.log(posterSizes);
 
     return {
-        base_url: base_url, 
-        poster_size: poster_sizes[poster_sizes.length-3],
+        baseUrl: baseUrl,
+        posterSize: posterSizes[posterSizes.length-3],
     };
 }
