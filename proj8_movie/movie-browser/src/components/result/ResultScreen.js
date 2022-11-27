@@ -18,8 +18,12 @@ export default class ResultScreen extends React.Component {
         }
     }
 
+    // fetch results of search
+    // result is array of movies
+    // each movie is an object: 
+    //     {id: number, title: string, poster: string | null, rating: number, genre: array of number}
     loadMovies = async () => {
-        console.log('load more movies');
+        // console.log('load more movies');
         // console.log(this.state)
         // if no more movies can be loaded or page more than 1000, do nothing
         if (!this.state.ifMoreAvailable || this.state.page > 1000) {
@@ -48,6 +52,7 @@ export default class ResultScreen extends React.Component {
             navigateToDetail={this.navigateToDetail} 
             posterSize={this.props.route.params.posterSize} 
             baseURL={this.props.route.params.baseUrl} 
+            genres={this.props.route.params.genres}
         />
     )
 
