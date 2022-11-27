@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, Pressable, Linking, ScrollView } from "react-native";
 import PropTypes from 'prop-types';
+import { Asset } from 'expo-asset';
 
 
 const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
@@ -30,13 +31,13 @@ export default class MovieDetail extends React.Component {
                     this.props.movie.poster === null
                         ? 
                     <Image 
-                        source={require(DEFAULT_IMAGE_PATH)} 
+                        source={this.props.params.defaultImgAsset} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
                         : 
                     <Image 
-                        source={{ uri: this.props.baseUrl + this.props.posterSize + this.props.movie.poster }} 
+                        source={{ uri: this.props.params.baseUrl + this.props.params.posterSize + this.props.movie.poster }} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
@@ -46,7 +47,7 @@ export default class MovieDetail extends React.Component {
                         this.props.movie.genres.map(genreId => (
                             <Pressable onPress={this.toTag} style={styles.tag}>
                                 <Text style={styles.tagText}>
-                                    {this.props.genres[`${genreId}`]}
+                                    {this.props.params.genres[`${genreId}`]}
                                 </Text>
                             </Pressable>
                         ))
@@ -75,6 +76,12 @@ export default class MovieDetail extends React.Component {
 
 MovieDetail.propTypes = {
     movie: PropTypes.object,
+    params: PropTypes.shape({
+        posterSize: PropTypes.string,
+        baseURL: PropTypes.string,
+        genres: PropTypes.object,
+        defaultImgAsset: PropTypes.instanceOf(Asset),
+    })
 }
 
 

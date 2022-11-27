@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 
 import SearchScreen from './src/components/search/SearchScreen';
@@ -15,6 +16,7 @@ import getConfig from './src/api/GetConfigAPI';
 
 const STACK = createNativeStackNavigator();
 const FONT_PATH = './assets/fonts/AmazonEmber_Bd.ttf';
+const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
 
 export default class App extends React.Component {
 
@@ -24,6 +26,7 @@ export default class App extends React.Component {
             genres: [],
             baseUrl: '',
             posterSize: 'original',
+            defaultImgAsset: null,
             ifAppReady: false
         }
     }
@@ -32,6 +35,11 @@ export default class App extends React.Component {
         await Font.loadAsync({
             'Amazon-Ember-Bold': require(FONT_PATH)
         });
+    }
+
+    loadDefaultImg = async () => {
+        const [{ localUri }] = await Asset.loadAsync(require(DEFAULT_IMAGE_PATH));
+        this.setState({defaultImgAsset: localUri});
     }
 
     getAPIBaseInfo = async () => {
@@ -45,8 +53,9 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        this.loadFonts();
-        this.getAPIBaseInfo();
+        (async () => {
+            await Promise.all([this.loadFonts(), this.getAPIBaseInfo(), this.loadDefaultImg()]);
+        })();
         this.setState({ifAppReady: true});
     }
 

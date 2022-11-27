@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
+import { Asset } from 'expo-asset';
 
 
 const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
@@ -22,13 +23,13 @@ export default function MovieSummary(props) {
                     props.movie.poster === null
                     ? 
                     <Image 
-                        source={require(DEFAULT_IMAGE_PATH)} 
+                        source={props.params.defaultImgAsset} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
                     : 
                     <Image 
-                        source={{ uri: props.baseURL + props.posterSize + props.movie.poster }} 
+                        source={{ uri: props.params.baseURL + props.params.posterSize + props.movie.poster }} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
@@ -41,7 +42,7 @@ export default function MovieSummary(props) {
                     props.movie.genre.map(genreId => (
                         <Pressable onPress={toTag} style={styles.tag}>
                             <Text style={styles.tagText}>
-                                {props.genres[`${genreId}`]}
+                                {props.params.genres[`${genreId}`]}
                             </Text>
                         </Pressable>
                     ))
@@ -61,9 +62,12 @@ MovieSummary.propTypes = {
         rating: PropTypes.number,
         genre: PropTypes.array,
     }),
-    posterSize: PropTypes.string,
-    baseURL: PropTypes.string,
-    genres: PropTypes.object,
+    params: PropTypes.shape({
+        posterSize: PropTypes.string,
+        baseURL: PropTypes.string,
+        genres: PropTypes.object,
+        defaultImgAsset: PropTypes.instanceOf(Asset),
+    }),
 }
 
 

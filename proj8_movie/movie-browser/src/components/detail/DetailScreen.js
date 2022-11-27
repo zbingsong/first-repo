@@ -54,9 +54,7 @@ export default class DetailScreen extends React.Component {
                 return (
                     <MovieDetail 
                         movie={this.state.movie} 
-                        baseUrl={this.props.route.params.baseUrl} 
-                        posterSize={this.props.route.params.posterSize} 
-                        genres={this.props.route.params.genres}
+                        params={this.props.route.params} 
                     />
                 );
             }

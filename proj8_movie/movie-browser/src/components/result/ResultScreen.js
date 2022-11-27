@@ -50,9 +50,7 @@ export default class ResultScreen extends React.Component {
         <MovieSummary 
             movie={item} 
             navigateToDetail={this.navigateToDetail} 
-            posterSize={this.props.route.params.posterSize} 
-            baseURL={this.props.route.params.baseUrl} 
-            genres={this.props.route.params.genres}
+            params={this.props.route.params}
         />
     )
 
