@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Font from 'expo-font';
 
 import SearchScreen from './src/components/search/SearchScreen';
 import ResultScreen from './src/components/result/ResultScreen';
@@ -13,6 +14,7 @@ import getConfig from './src/api/GetConfigAPI';
 
 
 const STACK = createNativeStackNavigator();
+const FONT_PATH = './assets/fonts/AmazonEmber_Bd.ttf';
 
 export default class App extends React.Component {
 
@@ -26,6 +28,12 @@ export default class App extends React.Component {
         }
     }
 
+    loadFonts = async () => {
+        await Font.loadAsync({
+            'Amazon-Ember-Bold': require(FONT_PATH)
+        });
+    }
+
     getAPIBaseInfo = async () => {
         const genres = await getGenreList();
         const APIconfig = await getConfig();
@@ -37,6 +45,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
+        this.loadFonts();
         this.getAPIBaseInfo();
         this.setState({ifAppReady: true});
     }

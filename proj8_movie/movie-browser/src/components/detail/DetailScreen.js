@@ -33,24 +33,33 @@ export default class DetailScreen extends React.Component {
     // }
     loadMovie = async () => {
         const movie = await getMovieDetailAsync(this.props.route.params.id);
-        this.setState({ifDetailReady: true, movie: movie});
+        this.setState({movie: movie});
     }
 
     componentDidMount() {
         // console.log('load movie');
         this.loadMovie();
+        this.setState({ifDetailReady: true});
     }
 
     render() {
         if (this.state.ifDetailReady) {
-            return (
-                <MovieDetail 
-                    movie={this.state.movie} 
-                    baseUrl={this.props.route.params.baseUrl} 
-                    posterSize={this.props.route.params.posterSize} 
-                    genres={this.props.route.params.genres}
-                />
-            );
+            if (this.state.movie === null) {
+                return (
+                    <View>
+                        <Text>Error loading movie info.</Text>
+                    </View>
+                );
+            } else {
+                return (
+                    <MovieDetail 
+                        movie={this.state.movie} 
+                        baseUrl={this.props.route.params.baseUrl} 
+                        posterSize={this.props.route.params.posterSize} 
+                        genres={this.props.route.params.genres}
+                    />
+                );
+            }
         } else {
             return (
                 <View>
