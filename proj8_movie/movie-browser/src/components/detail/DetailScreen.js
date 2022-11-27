@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PropTypes from 'prop-types';
+import PropTypes, { number, string } from 'prop-types';
 
-import findMoviesAsync from "../../api/GetDetailAPI";
+import getMovieDetailAsync from "../../api/GetDetailAPI";
 import MovieDetail from "./MovieDetail";
 
 
@@ -12,13 +12,27 @@ export default class DetailScreen extends React.Component {
         super(props);
         this.state = {
             ifDetailReady: false,
-            movie: null,
+            movie: null, 
         }
     }
 
+    // getMovieDetailAsync() returns a single movie in the form:
+    // {
+    //     title: string,
+    //     tagline: string,
+    //     genres: array of number,
+    //     imdbId: string,
+    //     plot: string,
+    //     poster: string,
+    //     popularity: number (float, between 0 to 100),
+    //     rating: number (float, between 0 to 10),
+    //     ratingCount: number (int, non-negative),
+    //     length: number (int, non-negative),
+    //     release: string,
+    //     homepage: string,
+    // }
     loadMovie = async () => {
-        // console.log(this.props.route.params.imdbID);
-        const movie = await findMoviesAsync(this.props.route.params.id);
+        const movie = await getMovieDetailAsync(this.props.route.params.id);
         this.setState({ifDetailReady: true, movie: movie});
     }
 
@@ -30,7 +44,12 @@ export default class DetailScreen extends React.Component {
     render() {
         if (this.state.ifDetailReady) {
             return (
-                <MovieDetail movie={this.state.movie} />
+                <MovieDetail 
+                    movie={this.state.movie} 
+                    baseUrl={this.props.route.params.baseUrl} 
+                    posterSize={this.props.route.params.posterSize} 
+                    genres={this.props.route.params.genres}
+                />
             );
         } else {
             return (

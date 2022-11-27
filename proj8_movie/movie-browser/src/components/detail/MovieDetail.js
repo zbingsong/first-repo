@@ -1,10 +1,28 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable, Linking } from "react-native";
 import PropTypes from 'prop-types';
+import { useFonts } from 'expo-font';
 
 
-const DEFAULT_IMAGE_PATH = '../../../assets/image-available-icon-flat-vector.jpg';
+const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
 
 export default function MovieDetail(props) {
+
+    const [fontsLoaded] = useFonts({
+        'Amazon-Ember-Bold': require('../../../assets/fonts/AmazonEmber+Bd.ttf'),
+    });
+
+    const toTag = () => {
+
+    }
+
+    const goToIMDB = async () => {
+        await Linking.openURL(`https://www.imdb.com/title/${props.movie.imdbId}/`);
+    }
+
+    const goToHomepage = async () => {
+        await Linking.openURL(props.movie.homepage);
+    }
+
     // console.log(props.movie.Poster);
     if (props.movie === null) {
         return (
@@ -18,16 +36,44 @@ export default function MovieDetail(props) {
                 {
                     props.movie.poster === null
                      ? 
-                    <Image source={require(DEFAULT_IMAGE_PATH)} style={styles.image} resizeMode='contain' />
+                    <Image 
+                        source={require(DEFAULT_IMAGE_PATH)} 
+                        style={styles.image} 
+                        resizeMode='contain' 
+                    />
                      : 
-                    <Image source={{ uri: props.movie.poster }} style={styles.image} resizeMode='contain' />
+                    <Image 
+                        source={{ uri: props.baseUrl + props.posterSize + props.movie.poster }} 
+                        style={styles.image} 
+                        resizeMode='contain' 
+                    />
                 }
-                <Text>{props.movie.Title}</Text>
-                <Text>Release date: {props.movie.Released}</Text>
-                <Text>Rated: {props.movie.Rated}</Text>
-                <Text>Director: {props.movie.Director}</Text>
-                <Text>Major actors: {props.movie.Actors}</Text>
-                <Text>Plot: {'\n'}{props.movie.Plot}</Text>
+                <View style={styles.tagContainer}>
+                    {
+                        props.movie.genre.map(genreId => (
+                            <Pressable onPress={toTag} style={styles.tag}>
+                                <Text style={styles.tagText}>
+                                    {props.genres[`${genreId}`]}
+                                </Text>
+                            </Pressable>
+                        ))
+                    }
+                </View>
+                
+                <Pressable onPress={goToIMDB} style={styles.imdbnLink}>
+                    <Text style={styles.imdbLinkText}>IMDB {props.movie.imdbId}</Text>
+                </Pressable>
+                <Pressable onPress={goToHomepage} style={styles.homepageLink}>
+                    <Text style={styles.homepageLinkText}>Movie Homepage</Text>
+                </Pressable>
+
+                <Text style={styles.title}>{props.movie.title}</Text>
+                <Text>{props.movie.tagline}</Text>
+                <Text>Release date: {props.movie.release}</Text>
+                <Text>Rating: {props.movie.rating} based on {props.movie.ratingCount} votes</Text>
+                <Text>popularity: {props.movie.popularity}</Text>
+                <Text>Length: {props.movie.length} minutes</Text>
+                <Text>Plot: {'\n'}{props.movie.plot}</Text>
             </View>
         );
     }
@@ -50,5 +96,54 @@ const styles = StyleSheet.create({
     image: {
         width: 400,
         height: 400,
+    },
+
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginVertical: 5
+    },
+
+    tagContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+
+    tag: {
+        borderRadius: 5,
+        backgroundColor: '#4d4d4d',
+        marginHorizontal: 2,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        elevation: 2,
+    },
+
+    tagText: {
+        color: '#cccccc',
+    },
+
+    imdbnLink: {
+        backgroundColor: '#DBA506',
+        borderRadius: 4,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        margin: 5,
+    },
+
+    imdbLinkText: {
+        color: 'black',
+        fontFamily: 'Amazon-Ember-Bold',
+    },
+
+    homepageLink: {
+        borderWidth: 1,
+        borderRadius: 4,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        margin: 5,
+    },
+
+    homepageLinkText: {
+
     },
 });
