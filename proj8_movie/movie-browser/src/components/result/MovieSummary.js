@@ -1,12 +1,11 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
-import { Asset } from 'expo-asset';
 
-
-const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
 
 export default function MovieSummary(props) {
+
+    // console.log(props.params)
 
     const toDetail = () => {
         props.navigateToDetail(props.movie.id);
@@ -23,13 +22,13 @@ export default function MovieSummary(props) {
                     props.movie.poster === null
                     ? 
                     <Image 
-                        source={props.params.defaultImgAsset} 
+                        source={{ uri: props.params.defaultImgAsset }}
                         style={styles.image} 
                         resizeMode='contain' 
                     />
                     : 
                     <Image 
-                        source={{ uri: props.params.baseURL + props.params.posterSize + props.movie.poster }} 
+                        source={{ uri: props.params.baseUrl + props.params.posterSize + props.movie.poster }} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
@@ -66,7 +65,7 @@ MovieSummary.propTypes = {
         posterSize: PropTypes.string,
         baseURL: PropTypes.string,
         genres: PropTypes.object,
-        defaultImgAsset: PropTypes.instanceOf(Asset),
+        defaultImgAsset: PropTypes.string,
     }),
 }
 

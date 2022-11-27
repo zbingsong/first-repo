@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { Asset } from 'expo-asset';
 
 
-const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
-
 export default class MovieDetail extends React.Component {
 
     constructor(props) {
@@ -31,7 +29,7 @@ export default class MovieDetail extends React.Component {
                     this.props.movie.poster === null
                         ? 
                     <Image 
-                        source={this.props.params.defaultImgAsset} 
+                        source={{ uri: this.props.params.defaultImgAsset }}
                         style={styles.image} 
                         resizeMode='contain' 
                     />

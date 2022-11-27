@@ -16,7 +16,7 @@ import getConfig from './src/api/GetConfigAPI';
 
 const STACK = createNativeStackNavigator();
 const FONT_PATH = './assets/fonts/AmazonEmber_Bd.ttf';
-const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
+const DEFAULT_IMAGE_PATH = './assets/img/image-available-icon-flat-vector.jpg';
 
 export default class App extends React.Component {
 
@@ -39,7 +39,7 @@ export default class App extends React.Component {
 
     loadDefaultImg = async () => {
         const [{ localUri }] = await Asset.loadAsync(require(DEFAULT_IMAGE_PATH));
-        this.setState({defaultImgAsset: localUri});
+        this.setState({defaultImgAsset: localUri}, () => console.log(localUri));
     }
 
     getAPIBaseInfo = async () => {
@@ -65,6 +65,7 @@ export default class App extends React.Component {
                 genres: this.state.genres, 
                 baseUrl: this.state.baseUrl, 
                 posterSize: this.state.posterSize,
+                defaultImgAsset: this.state.defaultImgAsset,
             };
 
             return (
