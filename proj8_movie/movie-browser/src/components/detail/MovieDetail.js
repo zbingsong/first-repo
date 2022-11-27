@@ -1,81 +1,106 @@
-import { View, Text, StyleSheet, Image, Pressable, Linking } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Image, Pressable, Linking, ScrollView } from "react-native";
 import PropTypes from 'prop-types';
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
 
 
 const DEFAULT_IMAGE_PATH = '../../../assets/img/image-available-icon-flat-vector.jpg';
+const FONT_PATH = '../../../assets/fonts/AmazonEmber_Bd.ttf';
 
-export default function MovieDetail(props) {
+export default class MovieDetail extends React.Component {
 
-    const [fontsLoaded] = useFonts({
-        'Amazon-Ember-Bold': require('../../../assets/fonts/AmazonEmber+Bd.ttf'),
-    });
+    constructor(props) {
+        super(props);
+        this.state = {
+            ifReady: false,
+        }
+    }
 
-    const toTag = () => {
+    loadFonts = async () => {
+        await Font.loadAsync({
+            'Amazon-Ember-Bold': require(FONT_PATH)
+        });
+    }
+
+    toTag = () => {
 
     }
 
-    const goToIMDB = async () => {
-        await Linking.openURL(`https://www.imdb.com/title/${props.movie.imdbId}/`);
+    goToIMDB = async () => {
+        await Linking.openURL(`https://www.imdb.com/title/${this.props.movie.imdbId}/`);
     }
 
-    const goToHomepage = async () => {
-        await Linking.openURL(props.movie.homepage);
+    goToHomepage = async () => {
+        await Linking.openURL(this.props.movie.homepage);
     }
 
-    // console.log(props.movie.Poster);
-    if (props.movie === null) {
-        return (
-            <View>
-                <Text>Error loading movie info.</Text>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.container}>
-                {
-                    props.movie.poster === null
-                     ? 
-                    <Image 
-                        source={require(DEFAULT_IMAGE_PATH)} 
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                     : 
-                    <Image 
-                        source={{ uri: props.baseUrl + props.posterSize + props.movie.poster }} 
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                }
-                <View style={styles.tagContainer}>
-                    {
-                        props.movie.genre.map(genreId => (
-                            <Pressable onPress={toTag} style={styles.tag}>
-                                <Text style={styles.tagText}>
-                                    {props.genres[`${genreId}`]}
-                                </Text>
-                            </Pressable>
-                        ))
-                    }
+    componentDidMount() {
+        this.loadFonts();
+        this.setState({ifReady: true});
+    }
+
+    render() {
+        if (this.state.ifReady) {
+            if (this.props.movie === null) {
+                return (
+                    <View>
+                        <Text>Error loading movie info.</Text>
+                    </View>
+                );
+            } else {
+                return (
+                    <ScrollView style={styles.container}>
+                        {
+                            this.props.movie.poster === null
+                             ? 
+                            <Image 
+                                source={require(DEFAULT_IMAGE_PATH)} 
+                                style={styles.image} 
+                                resizeMode='contain' 
+                            />
+                             : 
+                            <Image 
+                                source={{ uri: this.props.baseUrl + this.props.posterSize + this.props.movie.poster }} 
+                                style={styles.image} 
+                                resizeMode='contain' 
+                            />
+                        }
+                        <View style={styles.tagContainer}>
+                            {
+                                this.props.movie.genres.map(genreId => (
+                                    <Pressable onPress={this.toTag} style={styles.tag}>
+                                        <Text style={styles.tagText}>
+                                            {this.props.genres[`${genreId}`]}
+                                        </Text>
+                                    </Pressable>
+                                ))
+                            }
+                        </View>
+                        
+                        <Pressable onPress={this.goToIMDB} style={styles.imdbnLink}>
+                            <Text style={styles.imdbLinkText}>IMDB {this.props.movie.imdbId}</Text>
+                        </Pressable>
+                        <Pressable onPress={this.goToHomepage} style={styles.homepageLink}>
+                            <Text style={styles.homepageLinkText}>Movie Homepage</Text>
+                        </Pressable>
+        
+                        <Text style={styles.title}>{this.props.movie.title}</Text>
+                        <Text>{this.props.movie.tagline}</Text>
+                        <Text>Release date: {this.props.movie.release}</Text>
+                        <Text>Rating: {this.props.movie.rating} based on {this.props.movie.ratingCount} votes</Text>
+                        <Text>popularity: {this.props.movie.popularity}</Text>
+                        <Text>Length: {this.props.movie.length} minutes</Text>
+                        <Text>Plot: {'\n'}{this.props.movie.plot}</Text>
+                    </ScrollView>
+                );
+            }
+        } else {
+            return (
+                <View>
+                    <Text>Loading...</Text>
                 </View>
-                
-                <Pressable onPress={goToIMDB} style={styles.imdbnLink}>
-                    <Text style={styles.imdbLinkText}>IMDB {props.movie.imdbId}</Text>
-                </Pressable>
-                <Pressable onPress={goToHomepage} style={styles.homepageLink}>
-                    <Text style={styles.homepageLinkText}>Movie Homepage</Text>
-                </Pressable>
-
-                <Text style={styles.title}>{props.movie.title}</Text>
-                <Text>{props.movie.tagline}</Text>
-                <Text>Release date: {props.movie.release}</Text>
-                <Text>Rating: {props.movie.rating} based on {props.movie.ratingCount} votes</Text>
-                <Text>popularity: {props.movie.popularity}</Text>
-                <Text>Length: {props.movie.length} minutes</Text>
-                <Text>Plot: {'\n'}{props.movie.plot}</Text>
-            </View>
-        );
+            )
+        }
     }
 }
 
@@ -88,7 +113,7 @@ MovieDetail.propTypes = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignContent: 'center',
         padding: 15,
     },
