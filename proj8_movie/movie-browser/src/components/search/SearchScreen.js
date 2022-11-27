@@ -1,7 +1,8 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import SearchField from "./SearchField";
 import PropTypes from 'prop-types';
+
+import SearchField from "./SearchField";
 import Logo from '../../../assets/API-logo.svg';
 
 
@@ -37,6 +38,7 @@ export default class SearchScreen extends React.Component {
     }
 
     render() {
+        // console.log(this.props);
         return (
             <View style={styles.container}>
                 <Logo width={300} height={250} style={styles.logo} />
@@ -62,6 +64,7 @@ export default class SearchScreen extends React.Component {
 
 SearchScreen.propTypes = {
     navigation: PropTypes.object,
+    route: PropTypes.object,
 }
 
 

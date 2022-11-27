@@ -10,22 +10,21 @@ export default function MovieSummary(props) {
 
     const onPress = () => {
         // console.log(props.movie.imdbID);
-        props.navigateToDetail(props.movie.imdbID);
+        props.navigateToDetail(props.movie.id);
     }
 
     // console.log(props.movie.imdbID);
     return (
         <Pressable onPress={onPress} style={styles.pressable}>
             {
-                props.movie.Poster === 'N/A'
+                props.movie.poster === null
                  ? 
                 <Image source={require(DEFAULT_IMAGE_PATH)} style={styles.image} resizeMode='contain' />
                  : 
-                <Image source={{ uri: props.movie.Poster }} style={styles.image} resizeMode='contain' />
+                <Image source={{ uri: props.movie.poster }} style={styles.image} resizeMode='contain' />
             }
-            <Text>{props.movie.Title}</Text>
-            <Text>IMDb ID: {props.movie.imdbID}</Text>
-            <Text>Release year: {props.movie.Year}</Text>
+            <Text>{props.movie.title}</Text>
+            <Text>Rating: {props.movie.rating}</Text>
         </Pressable>
     )
 }
@@ -34,11 +33,11 @@ export default function MovieSummary(props) {
 MovieSummary.propTypes = {
     navigateToDetail: PropTypes.func,
     movie: PropTypes.shape({
-        Title: PropTypes.string,
-        Year: PropTypes.string,
-        imdbID: PropTypes.string,
-        Type: PropTypes.string,
-        Poster: PropTypes.string,
+        id: PropTypes.number,
+        title: PropTypes.string,
+        poster: PropTypes.string,
+        rating: PropTypes.number,
+        genre: PropTypes.array,
     })
 }
 

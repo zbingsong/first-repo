@@ -18,7 +18,7 @@ export default class DetailScreen extends React.Component {
 
     loadMovie = async () => {
         // console.log(this.props.route.params.imdbID);
-        const movie = await findMoviesAsync(this.props.route.params.imdbID);
+        const movie = await findMoviesAsync(this.props.route.params.id);
         this.setState({ifDetailReady: true, movie: movie});
     }
 

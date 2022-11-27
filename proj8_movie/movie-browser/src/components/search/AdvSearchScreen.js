@@ -35,6 +35,7 @@ export default class AdvSearchScreen extends React.Component {
     }
 
     render() {
+        // console.log(this.props.route);
         return (
             <View style={styles.container}>
                 <SearchField title='Movie Title*' value={this.state.movieTitle} 

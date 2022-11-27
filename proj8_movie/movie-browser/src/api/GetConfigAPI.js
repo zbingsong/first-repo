@@ -11,5 +11,9 @@ export default async function getConfig() {
     }
 
     const data = await response.json();
-    return { base_url: data.base_url, poster_size: data.poster_sizes.at(-2) };
+    const base_url = data.images.base_url;
+    const poster_sizes = data.images.poster_sizes;
+    // console.log(poster_sizes);
+
+    return { base_url: base_url, poster_size: poster_sizes[poster_sizes.length-2] };
 }

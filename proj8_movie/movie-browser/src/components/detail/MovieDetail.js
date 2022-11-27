@@ -16,11 +16,11 @@ export default function MovieDetail(props) {
         return (
             <View style={styles.container}>
                 {
-                    props.movie.Poster === 'N/A'
+                    props.movie.poster === null
                      ? 
                     <Image source={require(DEFAULT_IMAGE_PATH)} style={styles.image} resizeMode='contain' />
                      : 
-                    <Image source={{ uri: props.movie.Poster }} style={styles.image} resizeMode='contain' />
+                    <Image source={{ uri: props.movie.poster }} style={styles.image} resizeMode='contain' />
                 }
                 <Text>{props.movie.Title}</Text>
                 <Text>Release date: {props.movie.Released}</Text>

@@ -21,8 +21,8 @@ export default class ResultScreen extends React.Component {
     loadMovies = async () => {
         // console.log('load more movies');
         // console.log(this.state)
-        // if no more movies can be loaded or page more than 100, do nothing
-        if (!this.state.ifMoreAvailable || this.state.page > 100) {
+        // if no more movies can be loaded or page more than 1000, do nothing
+        if (!this.state.ifMoreAvailable || this.state.page > 1000) {
             return;
         }
 
@@ -38,8 +38,8 @@ export default class ResultScreen extends React.Component {
         }));
     }
 
-    navigateToDetail = (imdbID) => {
-        this.props.navigation.navigate('Detail', {imdbID: imdbID});
+    navigateToDetail = (id) => {
+        this.props.navigation.navigate('Detail', {id: id});
     }
 
     renderItem = ({ item }) => (
