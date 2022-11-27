@@ -19,9 +19,17 @@ export default function MovieSummary(props) {
             {
                 props.movie.poster === null
                  ? 
-                <Image source={require(DEFAULT_IMAGE_PATH)} style={styles.image} resizeMode='contain' />
+                <Image 
+                    source={require(DEFAULT_IMAGE_PATH)} 
+                    style={styles.image} 
+                    resizeMode='contain' 
+                />
                  : 
-                <Image source={{ uri: props.movie.poster }} style={styles.image} resizeMode='contain' />
+                <Image 
+                    source={{ uri: props.baseURL + props.posterSize + props.movie.poster }} 
+                    style={styles.image} 
+                    resizeMode='contain' 
+                />
             }
             <Text>{props.movie.title}</Text>
             <Text>Rating: {props.movie.rating}</Text>
@@ -38,7 +46,8 @@ MovieSummary.propTypes = {
         poster: PropTypes.string,
         rating: PropTypes.number,
         genre: PropTypes.array,
-    })
+    }),
+    baseURL: PropTypes.string,
 }
 
 

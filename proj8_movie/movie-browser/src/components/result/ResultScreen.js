@@ -19,7 +19,7 @@ export default class ResultScreen extends React.Component {
     }
 
     loadMovies = async () => {
-        // console.log('load more movies');
+        console.log('load more movies');
         // console.log(this.state)
         // if no more movies can be loaded or page more than 1000, do nothing
         if (!this.state.ifMoreAvailable || this.state.page > 1000) {
@@ -43,7 +43,12 @@ export default class ResultScreen extends React.Component {
     }
 
     renderItem = ({ item }) => (
-        <MovieSummary movie={item} navigateToDetail={this.navigateToDetail} />
+        <MovieSummary 
+            movie={item} 
+            navigateToDetail={this.navigateToDetail} 
+            posterSize={this.props.route.params.posterSize} 
+            baseURL={this.props.route.params.baseUrl} 
+        />
     )
 
     componentDidMount() {

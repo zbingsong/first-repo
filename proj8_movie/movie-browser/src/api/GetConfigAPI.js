@@ -15,5 +15,8 @@ export default async function getConfig() {
     const poster_sizes = data.images.poster_sizes;
     // console.log(poster_sizes);
 
-    return { base_url: base_url, poster_size: poster_sizes[poster_sizes.length-2] };
+    return {
+        base_url: base_url, 
+        poster_size: poster_sizes[poster_sizes.length-3],
+    };
 }

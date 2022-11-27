@@ -45,8 +45,8 @@ export default class App extends React.Component {
         if (this.state.ifAppReady) {
             const initialParams =  {
                 genres: this.state.genres, 
-                base_url: this.state.base_url, 
-                poster_size: this.state.poster_size,
+                baseUrl: this.state.base_url, 
+                posterSize: this.state.poster_size,
             };
 
             return (

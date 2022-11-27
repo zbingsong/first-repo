@@ -10,16 +10,13 @@ export default async function searchForMoviesAsync(title, page) {
     }
 
     const data = await response.json();
-    // if (data.Response === 'False') {
-    //     return { movies: [], ifMoreAvailable: true };
-    // }
 
     const results = data.results.map(movie => ({
         id: movie.id,
         title: movie.title,
         poster: movie.poster_path,
         rating: movie.vote_average,
-        genre: genre_ids,
+        genre: movie.genre_ids,
     }));
 
     const ifMoreAvailable = (page <= parseInt(data.total_pages));
