@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 
-const DEFAULT_IMAGE_PATH = '../../../assets/image-available-icon-flat-vector.jpg';
+const DEFAULT_IMAGE_PATH = '../../../img/assets/image-available-icon-flat-vector.jpg';
 
 export default function MovieSummary(props) {
 

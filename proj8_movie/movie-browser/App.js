@@ -20,8 +20,8 @@ export default class App extends React.Component {
         super();
         this.state = {
             genres: [],
-            base_url: '',
-            poster_size: 'original',
+            baseUrl: '',
+            posterSize: 'original',
             ifAppReady: false
         }
     }
@@ -31,8 +31,8 @@ export default class App extends React.Component {
         const APIconfig = await getConfig();
         this.setState({
             genres: genres,
-            base_url: APIconfig.base_url,
-            poster_size: APIconfig.poster_size
+            baseUrl: APIconfig.baseUrl,
+            posterSize: APIconfig.posterSize
         });
     }
 
@@ -45,8 +45,8 @@ export default class App extends React.Component {
         if (this.state.ifAppReady) {
             const initialParams =  {
                 genres: this.state.genres, 
-                baseUrl: this.state.base_url, 
-                posterSize: this.state.poster_size,
+                baseUrl: this.state.baseUrl, 
+                posterSize: this.state.posterSize,
             };
 
             return (

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
-import Logo from '../../../assets/API-logo.svg';
+import Logo from '../../../assets/img/API-logo.svg';
 
 
 export default class SearchScreen extends React.Component {
