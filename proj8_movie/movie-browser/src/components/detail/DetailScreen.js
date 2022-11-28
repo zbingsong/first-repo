@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 import getMovieDetailAsync from "../../api/GetDetailAPI";
@@ -35,25 +34,27 @@ export default class DetailScreen extends React.Component {
     // }
     loadMovie = async () => {
         const movie = await getMovieDetailAsync(this.props.route.params.id);
-        this.setState({movie: movie});
+        this.setState({movie: movie, ifDetailReady: true});
     }
 
     componentDidMount() {
         // console.log('load movie');
         this.loadMovie();
-        this.setState({ifDetailReady: true});
     }
 
     render() {
         if (!this.state.ifDetailReady) {
             return (
-                <LoadingScreen />
+                <LoadingScreen loadingImgAsset={this.props.route.params.loadingImgAsset} />
             );
         }
 
         if (this.state.movie === null) {
             return (
-                <ErrorScreen message='Error loading movie info.' />
+                <ErrorScreen 
+                    errorImgAsset={this.props.route.params.errorImgAsset} 
+                    message='Error loading movie info.' 
+                />
             );
         } else {
             return (
@@ -71,8 +72,3 @@ DetailScreen.propTypes = {
     navigation: PropTypes.object,
     route: PropTypes.object,
 }
-
-
-const styles = StyleSheet.create({
-
-});

@@ -66,6 +66,7 @@ export default class MovieDetail extends React.Component {
                 <Text>popularity: {this.props.movie.popularity}</Text>
                 <Text>Length: {this.props.movie.length} minutes</Text>
                 <Text>Plot: {'\n'}{this.props.movie.plot}</Text>
+                <Text>end</Text>
             </ScrollView>
         );
     }

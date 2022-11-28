@@ -31,13 +31,15 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            genres: [],
-            baseUrl: '',
-            posterSize: 'original',
-            defaultImgAsset: null,
-            loadingImgAsset: null,
-            errorImgAsset: null,
-            ifAppReady: false
+            ifAppReady: false,
+            params: {
+                genres: [],
+                baseUrl: '',
+                posterSize: 'original',
+                defaultImgAsset: null,
+                loadingImgAsset: null,
+                errorImgAsset: null,
+            }
         }
     }
 
@@ -54,9 +56,11 @@ export default class App extends React.Component {
             require(ERROR_IMAGE_PATH)
         ]);
         this.setState({
-            defaultImgAsset: loadedAssets[0].localUri, 
-            loadingImgAsset: loadedAssets[1].localUri,
-            errorImgAsset: loadedAssets[2].localUri
+            params: {
+                defaultImgAsset: loadedAssets[0].localUri, 
+                loadingImgAsset: loadedAssets[1].localUri,
+                errorImgAsset: loadedAssets[2].localUri
+            }
         });
     }
 
@@ -64,9 +68,11 @@ export default class App extends React.Component {
         const genres = await getGenreList();
         const APIconfig = await getConfig();
         this.setState({
-            genres: genres,
-            baseUrl: APIconfig.baseUrl,
-            posterSize: APIconfig.posterSize
+            params: {
+                genres: genres,
+                baseUrl: APIconfig.baseUrl,
+                posterSize: APIconfig.posterSize
+            }
         });
     }
 
@@ -78,7 +84,10 @@ export default class App extends React.Component {
         ]);
         this.setState(
             { ifAppReady: true }, 
-            async () => { await SplashScreen.hideAsync(); }
+            async () => { 
+                await SplashScreen.hideAsync(); 
+                // console.log(this.state.loadingImgAsset); 
+            }
         );
     }
 
@@ -91,29 +100,17 @@ export default class App extends React.Component {
             return null;
         }
 
-        const initialParams =  {
-            genres: this.state.genres, 
-            baseUrl: this.state.baseUrl, 
-            posterSize: this.state.posterSize,
-            defaultImgAsset: this.state.defaultImgAsset,
-            loadingImgAsset: this.state.loadingImgAsset,
-        };
-
         return (
             <NavigationContainer style={styles.container}>
                 <STACK.Navigator initialRouteName='Search'>
                     <STACK.Screen name='Search' component={SearchScreen} 
-                        initialParams={initialParams} />
+                        initialParams={this.state.params} />
                     <STACK.Screen name='AdvSearch' component={AdvSearchScreen} 
-                        initialParams={initialParams} />
+                        initialParams={this.state.params} />
                     <STACK.Screen name='Result' component={ResultScreen} 
-                        initialParams={initialParams} />
+                        initialParams={this.state.params} />
                     <STACK.Screen name='Detail' component={DetailScreen} 
-                        initialParams={initialParams} />
-                    <STACK.Screen name='Loading' component={LoadingScreen} 
-                        initialParams={{ loadingImgAsset: this.state.loadingImgAsset }} />
-                    <STACK.Screen name='Error' component={ErrorScreen}
-                        initialParams={{ errorImgAsset: this.state.errorImgAsset }} />
+                        initialParams={this.state.params} />
                 </STACK.Navigator>
             </NavigationContainer>
         );

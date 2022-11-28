@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default function ErrorScreen(props) {
     return (
         <View style={styles.container}>
-            <Image source={{ uri: props.route.params.errorImgAsset }} style={styles.image} />
+            <Image source={{ uri: props.errorImgAsset }} style={styles.image} />
             <Text>{props.message}</Text>
         </View>
     )
@@ -13,7 +13,7 @@ export default function ErrorScreen(props) {
 
 
 ErrorScreen.propTypes = {
-    loadingImgAsset: PropTypes.string,
+    errorImgAsset: PropTypes.string,
     message: PropTypes.string,
 }
 

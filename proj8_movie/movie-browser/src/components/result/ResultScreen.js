@@ -68,7 +68,12 @@ export default class ResultScreen extends React.Component {
                 <View style={styles.container}>
                     <FlatList data={this.state.results} 
                         renderItem={this.renderItem} 
-                        ListEmptyComponent={<ErrorScreen message='No movie was found.' />} 
+                        ListEmptyComponent={
+                            <ErrorScreen 
+                                errorImgAsset={this.props.route.params.errorImgAsset} 
+                                message='No movie was found.' 
+                            />
+                        } 
                         showsVerticalScrollIndicator={false} 
                         // When scrolling to second last movie on screen, load more movies
                         onEndReachedThreshold={1} 
@@ -78,7 +83,7 @@ export default class ResultScreen extends React.Component {
             );
         } else {
             return (
-                <LoadingScreen />
+                <LoadingScreen loadingImgAsset={this.props.route.params.loadingImgAsset} />
             );
         }
     }
