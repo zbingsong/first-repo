@@ -1,5 +1,5 @@
 // Get the base URL for images and allowed size of movie posters
-import API_KEY from './APIKey.js';
+import API_KEY from '../APIKey.js';
 
 
 export default async function getConfig() {

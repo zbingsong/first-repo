@@ -1,8 +1,5 @@
-import API_KEY from './APIKey.js';
-
-
-export default async function getTrending(page) {
-    const response = await fetch(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&page=${page}`);
+export default async function getMovies(url, page) {
+    const response = await fetch(url);
 
     if (!response.ok) {
         alert('Failed to fetch result list.');

@@ -1,4 +1,4 @@
-import API_KEY from './APIKey.js';
+import API_KEY from '../APIKey.js';
 
 
 export default async function getGenreList() {
