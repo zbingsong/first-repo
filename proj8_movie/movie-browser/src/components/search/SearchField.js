@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 export default function SearchField(props) {
     return (
         <View style={styles.container}>
-            <Text>{props.title}</Text>
             <TextInput 
                 value={props.value} 
                 maxLength={50} 
@@ -19,7 +18,6 @@ export default function SearchField(props) {
 
 
 SearchField.propTypes = {
-    title: PropTypes.string,
     value: PropTypes.string,
     placeholder: PropTypes.string,
     update: PropTypes.func,

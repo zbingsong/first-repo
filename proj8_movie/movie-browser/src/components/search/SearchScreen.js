@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
-import Logo from '../../../assets/img/API-logo.svg';
+import Logo from '../../../assets/img/API-logo-long-1.svg';
 
 
 export default class SearchScreen extends React.Component {
@@ -44,8 +44,8 @@ export default class SearchScreen extends React.Component {
             <View style={styles.container}>
                 <Logo width={300} height={250} style={styles.logo} />
 
-                <SearchField title='Movie Title*' value={this.state.movieTitle} 
-                    placeholder='Title' update={this.handleTitleUpdate} />
+                <SearchField value={this.state.movieTitle} 
+                    placeholder='Search Movie...' update={this.handleTitleUpdate} />
 
                 <View style={styles.buttonContainer}>
                     <Pressable style={styles.button} onPress={this.navigateToResult}>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
 
     logo: {
-        marginBottom: 50,
+        marginBottom: 30,
     },
 
     image: {
