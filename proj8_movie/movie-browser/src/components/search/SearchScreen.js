@@ -38,12 +38,13 @@ export default class SearchScreen extends React.Component {
     }
 
     render() {
-        console.log(this.props.route.params);
+        // console.log('search');
+        // console.log(this.props.route);
         return (
             <View style={styles.container}>
                 <Logo width={300} height={250} style={styles.logo} />
 
-                <Image source={this.props.route.params.defaultImgAsset} style={{ width: 100, height: 100 }}/>
+                <Image source={this.props.route.params.defaultImgAsset} style={styles.image} />
 
                 <SearchField title='Movie Title*' value={this.state.movieTitle} 
                     placeholder='Title' update={this.handleTitleUpdate} />
@@ -80,6 +81,11 @@ const styles = StyleSheet.create({
 
     logo: {
         marginBottom: 50,
+    },
+
+    image: {
+        width: 100, 
+        height: 100,
     },
 
     button: {

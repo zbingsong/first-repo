@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PropTypes, { number, string } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import getMovieDetailAsync from "../../api/GetDetailAPI";
 import MovieDetail from "./MovieDetail";
+import LoadingScreen from "../common/LoadingScreen";
+import ErrorScreen from "../common/ErrorScreen";
 
 
 export default class DetailScreen extends React.Component {
@@ -43,27 +45,23 @@ export default class DetailScreen extends React.Component {
     }
 
     render() {
-        if (this.state.ifDetailReady) {
-            if (this.state.movie === null) {
-                return (
-                    <View>
-                        <Text>Error loading movie info.</Text>
-                    </View>
-                );
-            } else {
-                return (
-                    <MovieDetail 
-                        movie={this.state.movie} 
-                        params={this.props.route.params} 
-                    />
-                );
-            }
+        if (!this.state.ifDetailReady) {
+            return (
+                <LoadingScreen />
+            );
+        }
+
+        if (this.state.movie === null) {
+            return (
+                <ErrorScreen message='Error loading movie info.' />
+            );
         } else {
             return (
-                <View>
-                    <Text>Loading movie information...</Text>
-                </View>
-            )
+                <MovieDetail 
+                    movie={this.state.movie} 
+                    params={this.props.route.params} 
+                />
+            );
         }
     }
 }

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import searchForMoviesAsync from "../../api/SearchAPI";
 import MovieSummary from "./MovieSummary";
+import LoadingScreen from "../common/LoadingScreen";
+import ErrorScreen from "../common/ErrorScreen";
 
 
 export default class ResultScreen extends React.Component {
@@ -38,7 +40,8 @@ export default class ResultScreen extends React.Component {
         this.setState(prevState => ({
             results: [...prevState.results, ...result.movies],
             page: prevState.page + 1,
-            ifMoreAvailable: result.ifMoreAvailable
+            ifMoreAvailable: result.ifMoreAvailable,
+            ifResultsReady: true
         }));
     }
 
@@ -56,7 +59,7 @@ export default class ResultScreen extends React.Component {
 
     componentDidMount() {
         this.loadMovies();
-        this.setState({ifResultsReady: true})
+        // this.setState({ifResultsReady: true})
     }
 
     render() {
@@ -65,7 +68,7 @@ export default class ResultScreen extends React.Component {
                 <View style={styles.container}>
                     <FlatList data={this.state.results} 
                         renderItem={this.renderItem} 
-                        ListEmptyComponent={(<Text>No movie was found.</Text>)} 
+                        ListEmptyComponent={<ErrorScreen message='No movie was found.' />} 
                         showsVerticalScrollIndicator={false} 
                         // When scrolling to second last movie on screen, load more movies
                         onEndReachedThreshold={1} 
@@ -75,9 +78,7 @@ export default class ResultScreen extends React.Component {
             );
         } else {
             return (
-                <View style={styles.container}>
-                    <Text>Loading results...</Text>
-                </View>
+                <LoadingScreen />
             );
         }
     }
