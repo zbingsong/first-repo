@@ -11,9 +11,6 @@ import ResultScreen from './src/components/result/ResultScreen';
 import DetailScreen from './src/components/detail/DetailScreen';
 import AdvSearchScreen from './src/components/search/AdvSearchScreen';
 
-import LoadingScreen from './src/components/common/LoadingScreen';
-import ErrorScreen from './src/components/common/ErrorScreen';
-
 import getGenreList from './src/api/GetGenreListAPI';
 import getConfig from './src/api/GetConfigAPI';
 
@@ -55,25 +52,27 @@ export default class App extends React.Component {
             require(LOADING_IMAGE_PATH),
             require(ERROR_IMAGE_PATH)
         ]);
-        this.setState({
+        this.setState(prevState => ({
             params: {
+                ...prevState.params,
                 defaultImgAsset: loadedAssets[0].localUri, 
                 loadingImgAsset: loadedAssets[1].localUri,
                 errorImgAsset: loadedAssets[2].localUri
             }
-        });
+        }));
     }
 
     getAPIBaseInfo = async () => {
         const genres = await getGenreList();
         const APIconfig = await getConfig();
-        this.setState({
+        this.setState(prevState => ({
             params: {
+                ...prevState.params,
                 genres: genres,
                 baseUrl: APIconfig.baseUrl,
                 posterSize: APIconfig.posterSize
             }
-        });
+        }));
     }
 
     completeAPICalls = async () => {

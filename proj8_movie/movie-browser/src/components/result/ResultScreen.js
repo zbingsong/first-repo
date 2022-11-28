@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import PropTypes from 'prop-types';
 
 import searchForMoviesAsync from "../../api/SearchAPI";

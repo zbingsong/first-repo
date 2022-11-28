@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
@@ -39,12 +39,10 @@ export default class SearchScreen extends React.Component {
 
     render() {
         // console.log('search');
-        // console.log(this.props.route);
+        // console.log(this.props);
         return (
             <View style={styles.container}>
                 <Logo width={300} height={250} style={styles.logo} />
-
-                <Image source={this.props.route.params.defaultImgAsset} style={styles.image} />
 
                 <SearchField title='Movie Title*' value={this.state.movieTitle} 
                     placeholder='Title' update={this.handleTitleUpdate} />
@@ -58,7 +56,6 @@ export default class SearchScreen extends React.Component {
                         <Text style={styles.buttonText}>Advanced Search</Text>
                     </Pressable>
                 </View>
-                
             </View>
         );
     }
