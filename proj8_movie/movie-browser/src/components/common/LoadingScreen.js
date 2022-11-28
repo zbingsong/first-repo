@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 
 export default function LoadingScreen(props) {
+    // console.log(props);
     return (
         <View style={styles.container}>
-            <Image source={{ uri: props.loadingImgAsset }} style={styles.image} />
+            <Image source={{ uri: props.route.params.loadingImgAsset }} style={styles.image} />
             <Text>Loading...</Text>
         </View>
     );
