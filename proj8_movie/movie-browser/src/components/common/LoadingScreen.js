@@ -7,7 +7,6 @@ export default function LoadingScreen(props) {
     return (
         <View style={styles.container}>
             <Image source={{ uri: props.loadingImgAsset }} style={styles.image} />
-            <Text>Loading...</Text>
         </View>
     );
 }
