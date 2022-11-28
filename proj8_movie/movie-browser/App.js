@@ -11,8 +11,8 @@ import ResultScreen from './src/components/result/ResultScreen';
 import DetailScreen from './src/components/detail/DetailScreen';
 import AdvSearchScreen from './src/components/search/AdvSearchScreen';
 
-import getGenreList from './src/api/GetGenreListAPI';
-import getConfig from './src/api/GetConfigAPI';
+import getGenreList from './src/api/config/GetGenreListAPI';
+import getConfig from './src/api/config/GetConfigAPI';
 
 
 SplashScreen.preventAutoHideAsync();
