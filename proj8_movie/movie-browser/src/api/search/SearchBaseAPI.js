@@ -1,4 +1,4 @@
-export default async function getMovies(url, page) {
+export default async function getMoviesAsync(url, page) {
     const response = await fetch(url);
 
     if (!response.ok) {
