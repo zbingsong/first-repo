@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
+import TrendingComponent from "../trending/TrendingComponent";
 import Logo from '../../../assets/img/API-logo-long-1.svg';
 
 
@@ -56,6 +57,11 @@ export default class SearchScreen extends React.Component {
                         <Text style={styles.buttonText}>Advanced Search</Text>
                     </Pressable>
                 </View>
+
+                <TrendingComponent 
+                    navigate={this.props.navigation.navigate} 
+                    params={this.props.route.params} 
+                />
             </View>
         );
     }
