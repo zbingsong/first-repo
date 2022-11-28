@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
@@ -42,27 +42,30 @@ export default class SearchScreen extends React.Component {
         // console.log('search');
         // console.log(this.props);
         return (
-            <View style={styles.container}>
-                <Logo width={300} height={250} style={styles.logo} />
+            <ScrollView>
+                <View style={styles.container}>
+                    
+                        <Logo width={300} height={100} style={styles.logo} />
 
-                <SearchField value={this.state.movieTitle} 
-                    placeholder='Search Movie...' update={this.handleTitleUpdate} />
+                        <SearchField value={this.state.movieTitle} 
+                            placeholder='Search Movie...' update={this.handleTitleUpdate} />
 
-                <View style={styles.buttonContainer}>
-                    <Pressable style={styles.button} onPress={this.navigateToResult}>
-                        <Text style={styles.buttonText}>Search</Text>
-                    </Pressable>
+                        <View style={styles.buttonContainer}>
+                            <Pressable style={styles.button} onPress={this.navigateToResult}>
+                                <Text style={styles.buttonText}>Search</Text>
+                            </Pressable>
 
-                    <Pressable style={styles.button} onPress={this.navigateToAdvSearch}>
-                        <Text style={styles.buttonText}>Advanced Search</Text>
-                    </Pressable>
+                            <Pressable style={styles.button} onPress={this.navigateToAdvSearch}>
+                                <Text style={styles.buttonText}>Advanced Search</Text>
+                            </Pressable>
+                        </View>
+
+                        {/* <TrendingComponent 
+                            navigate={this.props.navigation.navigate} 
+                            params={this.props.route.params} 
+                        /> */}
                 </View>
-
-                <TrendingComponent 
-                    navigate={this.props.navigation.navigate} 
-                    params={this.props.route.params} 
-                />
-            </View>
+            </ScrollView>
         );
     }
 }

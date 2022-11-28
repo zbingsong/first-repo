@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 import PropTypes from 'prop-types';
 
-import searchForMoviesAsync from "../../api/SearchAPI";
+import searchForMoviesAsync from "../../api/search/SearchAPI";
 import MovieSummary from "./MovieSummary";
 import LoadingScreen from "../common/LoadingScreen";
 import ErrorScreen from "../common/ErrorScreen";

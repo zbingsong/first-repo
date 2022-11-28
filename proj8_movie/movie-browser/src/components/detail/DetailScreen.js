@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-import getMovieDetailAsync from "../../api/GetDetailAPI";
+import getMovieDetailAsync from "../../api/detail/GetDetailAPI";
 import MovieDetail from "./MovieDetail";
 import LoadingScreen from "../common/LoadingScreen";
 import ErrorScreen from "../common/ErrorScreen";
