@@ -67,6 +67,7 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
                     onEndReachedThreshold={1}
                     onEndReached={this.loadMovies}
                     showsHorizontalScrollIndicator={false}
+                    style={styles.list}
                 />
             </View>
         )
@@ -93,6 +94,13 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         alignItems: 'center',
+        marginHorizontal: 5,
+        marginVertical: 5,
+    },
+
+    list: {
+        marginVertical: 5,
+        marginHorizontal: 5,
     },
 
     componentTitle: {

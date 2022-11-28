@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Shadow } from 'react-native-shadow-2';
 import PropTypes from 'prop-types';
 
 
@@ -10,7 +11,7 @@ export default function MovieTab(props) {
     }
 
     return (
-        <View style={styles.container}>
+        <Shadow distance={6} offset={[11, 9]} style={styles.container}>
             <Pressable onPress={toDetail} style={styles.pressable}>
                 {
                     props.movie.poster === null
@@ -28,9 +29,9 @@ export default function MovieTab(props) {
                     />
                 }
                 <Text style={styles.title}>{props.movie.title}</Text>
-                <Text>Rating: {props.movie.rating}</Text>
+                <Text>Rating: {props.movie.rating.toFixed(1)}</Text>
             </Pressable>
-        </View>
+        </Shadow>
     )
 }
 
@@ -55,26 +56,37 @@ MovieTab.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 0,
-        borderColor: 'black',
-        marginVertical: 10,
-        padding: 15,
+        backgroundColor: '#fff',
+        // borderWidth: 1,
+        borderRadius: 5,
+        marginVertical: 8,
+        marginHorizontal: 10,
+        // elevation: 5,
+        padding: 5,
+        width: 190,
+        height: 300,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     pressable: {
         alignItems: 'center',
-        margin: 15,
+        margin: 10,
     },
 
     image: {
         width: 150,
-        height: 150,
-        marginVertical: 10,
+        height: 190,
+        marginVertical: 3,
     },
 
     title: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginVertical: 5
+        marginVertical: 5,
+        flexWrap: 'wrap',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        height: 50,
     },
 });

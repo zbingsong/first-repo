@@ -43,10 +43,10 @@ export default class SearchScreen extends React.Component {
         // console.log('search');
         // console.log(this.props);
         return (
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     
-                        <Logo width={300} height={100} style={styles.logo} />
+                        <Logo width={300} height={80} style={styles.logo} />
 
                         <SearchField value={this.state.movieTitle} 
                             placeholder='Search Movie...' update={this.handleTitleUpdate} />
