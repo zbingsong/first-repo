@@ -66,7 +66,8 @@ export default class ResultScreen extends React.Component {
         if (this.state.ifResultsReady) {
             return (
                 <View style={styles.container}>
-                    <FlatList data={this.state.results} 
+                    <FlatList 
+                        data={this.state.results} 
                         renderItem={this.renderItem} 
                         ListEmptyComponent={
                             <ErrorScreen 
