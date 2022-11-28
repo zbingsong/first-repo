@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
 import TrendingComponent from "../mainpage/TrendingComponent";
+import TopRatedComponent from '../mainpage/TopRatedComponent'
 import Logo from '../../../assets/img/API-logo-long-1.svg';
 
 
@@ -61,6 +62,11 @@ export default class SearchScreen extends React.Component {
                         </View>
 
                         <TrendingComponent 
+                            navigate={this.props.navigation.navigate} 
+                            params={this.props.route.params} 
+                        />
+
+                        <TopRatedComponent 
                             navigate={this.props.navigation.navigate} 
                             params={this.props.route.params} 
                         />

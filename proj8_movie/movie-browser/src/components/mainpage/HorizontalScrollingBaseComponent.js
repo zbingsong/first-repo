@@ -47,7 +47,7 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
     }
 
     render() {
-        // console.log(this.state.trendingList);
+        // console.log(this.state.results);
         return (
             <View style={styles.container}>
                 <Text style={styles.componentTitle}>
@@ -55,7 +55,7 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
                 </Text>
 
                 <FlatList 
-                    data={this.state.trendingList} 
+                    data={this.state.results} 
                     renderItem={this.renderItem} 
                     ListEmptyComponent={
                         <View>
@@ -65,7 +65,7 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
                     keyExtractor={item => item.id}
                     horizontal={true}
                     onEndReachedThreshold={1}
-                    onEndReached={this.loadTrendingMovies}
+                    onEndReached={this.loadMovies}
                     showsHorizontalScrollIndicator={false}
                 />
             </View>
