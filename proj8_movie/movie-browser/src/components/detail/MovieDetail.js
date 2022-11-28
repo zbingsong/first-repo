@@ -24,49 +24,52 @@ export default class MovieDetail extends React.Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
-                {
-                    this.props.movie.poster === null
-                        ? 
-                    <Image 
-                        source={{ uri: this.props.params.defaultImgAsset }}
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                        : 
-                    <Image 
-                        source={{ uri: this.props.params.baseUrl + this.props.params.posterSize + this.props.movie.poster }} 
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                }
-                <View style={styles.tagContainer}>
+            <ScrollView>
+                <View style={styles.container}>
                     {
-                        this.props.movie.genres.map(genreId => (
-                            <Pressable onPress={this.toTag} style={styles.tag}>
-                                <Text style={styles.tagText}>
-                                    {this.props.params.genres[`${genreId}`]}
-                                </Text>
-                            </Pressable>
-                        ))
+                        this.props.movie.poster === null
+                            ? 
+                        <Image 
+                            source={{ uri: this.props.params.defaultImgAsset }}
+                            style={styles.image} 
+                            resizeMode='contain' 
+                        />
+                            : 
+                        <Image 
+                            source={{ uri: this.props.params.baseUrl + this.props.params.posterSize + this.props.movie.poster }} 
+                            style={styles.image} 
+                            resizeMode='contain' 
+                        />
                     }
-                </View>
-                
-                <Pressable onPress={this.goToIMDB} style={styles.imdbnLink}>
-                    <Text style={styles.imdbLinkText}>IMDB {this.props.movie.imdbId}</Text>
-                </Pressable>
-                <Pressable onPress={this.goToHomepage} style={styles.homepageLink}>
-                    <Text style={styles.homepageLinkText}>Movie Homepage</Text>
-                </Pressable>
+                    <View style={styles.tagContainer}>
+                        {
+                            this.props.movie.genres.map(genreId => (
+                                <Pressable onPress={this.toTag} style={styles.tag}>
+                                    <Text style={styles.tagText}>
+                                        {this.props.params.genres[`${genreId}`]}
+                                    </Text>
+                                </Pressable>
+                            ))
+                        }
+                    </View>
 
-                <Text style={styles.title}>{this.props.movie.title}</Text>
-                <Text>{this.props.movie.tagline}</Text>
-                <Text>Release date: {this.props.movie.release}</Text>
-                <Text>Rating: {this.props.movie.rating} based on {this.props.movie.ratingCount} votes</Text>
-                <Text>popularity: {this.props.movie.popularity}</Text>
-                <Text>Length: {this.props.movie.length} minutes</Text>
-                <Text>Plot: {'\n'}{this.props.movie.plot}</Text>
-                <Text>end</Text>
+                    <View>
+                        <Pressable onPress={this.goToIMDB} style={styles.imdbnLink}>
+                            <Text style={styles.imdbLinkText}>IMDB {this.props.movie.imdbId}</Text>
+                        </Pressable>
+                        <Pressable onPress={this.goToHomepage} style={styles.homepageLink}>
+                            <Text style={styles.homepageLinkText}>Movie Homepage</Text>
+                        </Pressable>
+                    </View>
+
+                    <Text style={styles.title}>{this.props.movie.title}</Text>
+                    <Text>{this.props.movie.tagline}</Text>
+                    <Text>Release date: {this.props.movie.release}</Text>
+                    <Text>Rating: {this.props.movie.rating} based on {this.props.movie.ratingCount} votes</Text>
+                    <Text>popularity: {this.props.movie.popularity}</Text>
+                    <Text>Length: {this.props.movie.length} minutes</Text>
+                    <Text>Plot: {'\n'}{this.props.movie.plot}</Text>
+                </View>
             </ScrollView>
         );
     }
@@ -119,6 +122,10 @@ const styles = StyleSheet.create({
 
     tagText: {
         color: '#cccccc',
+    },
+
+    pressableContainer: {
+        flexDirection: 'row',
     },
 
     imdbnLink: {
