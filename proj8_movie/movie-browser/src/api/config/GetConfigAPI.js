@@ -7,7 +7,7 @@ export default async function getConfig() {
 
     if (!response.ok) {
         alert('Failed to fetch genre list.');
-        return { base_url: '', poster_size: '' };
+        return { baseURL: '', posterSize: '' };
     }
 
     const data = await response.json();
@@ -16,7 +16,7 @@ export default async function getConfig() {
     // console.log(posterSizes);
 
     return {
-        baseUrl: baseUrl,
+        baseURL: baseUrl,
         posterSize: posterSizes[posterSizes.length-3],
     };
 }
