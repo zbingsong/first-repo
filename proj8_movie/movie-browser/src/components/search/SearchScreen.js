@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View, Dimensions } from "react-native";
+import { Pressable, StyleSheet, Text, View, Dimensions, KeyboardAvoidingView } from "react-native";
 import PropTypes from 'prop-types';
 
 import SearchField from "./SearchField";
@@ -41,7 +41,12 @@ export default class SearchScreen extends React.Component {
     render() {
         // console.log(this.props);
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView 
+                behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                keyboardVerticalOffset={0} 
+                enabled={Platform.OS === "ios"} 
+                style={styles.container}
+            >
                 <Logo width={Dimensions.get('window').width * 0.9} height={60} />
 
                 <View style={styles.searchBar}>
@@ -53,7 +58,7 @@ export default class SearchScreen extends React.Component {
                 </View>
 
                 <BrowseComponent params={this.props.route.params} />
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }
