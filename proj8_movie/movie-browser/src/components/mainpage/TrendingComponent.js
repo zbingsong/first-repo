@@ -1,17 +1,15 @@
 import PropTypes from 'prop-types';
 
-import ScrollingBaseComponent from "./ScrollingBaseComponent";
+import TabComponent from './TabComponent';
 import getTrendingAsync from "../../api/search/TrendingAPI";
 
 
 export default function TrendingComponent(props) {
-    // console.log(props);
     return (
-        <ScrollingBaseComponent
+        <TabComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getTrendingAsync}
-            componentTitle='Trending This Week'
         />
     );
 }

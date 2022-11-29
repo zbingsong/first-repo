@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 
-import ScrollingBaseComponent from "./ScrollingBaseComponent";
+import TabComponent from './TabComponent';
 import getUpcomingAsync from '../../api/search/UpcomingAPI';
 
 
 export default function UpcomingComponent(props) {
     return (
-        <ScrollingBaseComponent
+        <TabComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getUpcomingAsync}
-            componentTitle='Upcoming next month'
         />
     );
 }

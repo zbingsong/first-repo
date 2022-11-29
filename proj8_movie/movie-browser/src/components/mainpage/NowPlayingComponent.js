@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
 
-import ScrollingBaseComponent from "./ScrollingBaseComponent";
+import TabComponent from './TabComponent';
 import getNowPlayingAsync from '../../api/search/NowPlayingAPI';
 
 
 export default function NowPlayingComponent(props) {
     return (
-        <ScrollingBaseComponent
+        <TabComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getNowPlayingAsync}
-            componentTitle='Now in Theater'
         />
     );
 }

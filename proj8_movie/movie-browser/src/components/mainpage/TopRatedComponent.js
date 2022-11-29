@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 
-import ScrollingBaseComponent from "./ScrollingBaseComponent";
+import TabComponent from './TabComponent';
 import getTopRatedAsync from '../../api/search/TopRatedAPI';
 
 
 export default function TopRatedComponent(props) {
     // console.log(props);
     return (
-        <ScrollingBaseComponent
+        <TabComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getTopRatedAsync}
-            componentTitle='Top Rated'
         />
     );
 }
