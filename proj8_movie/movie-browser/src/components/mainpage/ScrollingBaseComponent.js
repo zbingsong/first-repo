@@ -50,9 +50,9 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
         // console.log(this.state.results);
         return (
             <View style={styles.container}>
-                <Text style={styles.componentTitle}>
+                {/* <Text style={styles.componentTitle}>
                     {this.props.componentTitle}
-                </Text>
+                </Text> */}
 
                 <FlatList 
                     data={this.state.results} 
@@ -63,10 +63,12 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
                         </View>
                     }
                     keyExtractor={item => item.id}
-                    horizontal={true}
+                    // horizontal={true}
+                    numColumns={2}
                     onEndReachedThreshold={1}
                     onEndReached={this.loadMovies}
                     showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     style={styles.list}
                 />
             </View>
@@ -91,16 +93,15 @@ HorizontalScrollingBaseComponent.propTypes = {
 const styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
+        // borderTopWidth: 1,
+        // borderBottomWidth: 1,
         alignItems: 'center',
-        marginHorizontal: 5,
-        marginVertical: 5,
+        // marginVertical: 5,
     },
 
     list: {
-        marginVertical: 5,
-        marginHorizontal: 5,
+        // marginVertical: 5,
+        // marginHorizontal: 5,
     },
 
     componentTitle: {

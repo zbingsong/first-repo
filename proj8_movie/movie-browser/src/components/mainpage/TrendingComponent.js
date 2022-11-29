@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 
-import HorizontalScrollingBaseComponent from "./HorizontalScrollingBaseComponent";
+import HorizontalScrollingBaseComponent from "./ScrollingBaseComponent";
 import getTrendingAsync from "../../api/search/TrendingAPI";
 
 
 export default function TrendingComponent(props) {
+    // console.log(props);
     return (
         <HorizontalScrollingBaseComponent
-            navigate={props.navigate}
-            params={props.params}
+            navigate={props.navigation.navigate}
+            params={props.route.params}
             api={getTrendingAsync}
             componentTitle='Trending This Week'
         />
@@ -17,11 +18,17 @@ export default function TrendingComponent(props) {
 
 
 TrendingComponent.propTypes = {
-    navigate: PropTypes.func,
-    params: PropTypes.shape({
-        posterSize: PropTypes.string,
-        baseURL: PropTypes.string,
-        genres: PropTypes.object,
-        defaultImgAsset: PropTypes.string,
+    navigation: PropTypes.object,
+    route: PropTypes.shape({
+        key: PropTypes.string,
+        name: PropTypes.string,
+        params: PropTypes.shape({
+            posterSize: PropTypes.string,
+            baseURL: PropTypes.string,
+            genres: PropTypes.object,
+            defaultImgAsset: PropTypes.string,
+            loadingImgAsset: PropTypes.string,
+            errorImgAsset: PropTypes.string,
+        }),
     }),
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, Dimensions } from "react-native";
 import { Shadow } from 'react-native-shadow-2';
 import PropTypes from 'prop-types';
 
@@ -11,7 +11,7 @@ export default function MovieTab(props) {
     }
 
     return (
-        <Shadow distance={6} offset={[11, 9]} style={styles.container}>
+        <Shadow distance={6} offset={[9, 9]} style={styles.container}>
             <Pressable onPress={toDetail} style={styles.pressable}>
                 {
                     props.movie.poster === null
@@ -60,10 +60,10 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         borderRadius: 5,
         marginVertical: 8,
-        marginHorizontal: 10,
+        marginHorizontal: 8,
         // elevation: 5,
         padding: 5,
-        width: 190,
+        width: Dimensions.get('window').width * 0.45,
         height: 300,
         alignItems: 'center',
         justifyContent: 'center',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 
     image: {
         width: 150,
-        height: 190,
+        height: 200,
         marginVertical: 3,
     },
 

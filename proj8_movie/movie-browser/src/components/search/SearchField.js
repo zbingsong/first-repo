@@ -1,10 +1,10 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions } from "react-native";
 import PropTypes from 'prop-types';
 
 
 export default function SearchField(props) {
     return (
-        <View style={styles.container}>
+        <View>
             <TextInput 
                 value={props.value} 
                 maxLength={50} 
@@ -25,15 +25,11 @@ SearchField.propTypes = {
 
 
 const styles = StyleSheet.create({
-    container: {
-        marginVertical: 10,
-    },
-
     textInput: {
-        width: 300,
-        height: 40,
+        width: Dimensions.get('window').width * 0.72,
+        height: 42,
         borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 10,
+        borderRadius: 10,
+        paddingHorizontal: 16,
     },
 });
