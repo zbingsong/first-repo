@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Asset } from 'expo-asset';
@@ -31,7 +31,7 @@ export default class App extends React.Component {
             ifAppReady: false,
             params: {
                 genres: [],
-                baseUrl: '',
+                baseURL: '',
                 posterSize: 'original',
                 defaultImgAsset: null,
                 loadingImgAsset: null,
@@ -69,7 +69,7 @@ export default class App extends React.Component {
             params: {
                 ...prevState.params,
                 genres: genres,
-                baseUrl: APIconfig.baseUrl,
+                baseURL: APIconfig.baseURL,
                 posterSize: APIconfig.posterSize
             }
         }));
