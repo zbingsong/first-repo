@@ -1,11 +1,10 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View, Dimensions } from "react-native";
+import { Shadow } from 'react-native-shadow-2';
 import PropTypes from 'prop-types';
 
 
 export default function MovieSummary(props) {
-
-    // console.log(props.params)
 
     const toDetail = () => {
         props.navigateToDetail(props.movie.id);
@@ -16,7 +15,7 @@ export default function MovieSummary(props) {
     }
 
     return (
-        <View style={styles.container}>
+        <Shadow distance={5} offset={[9, 9]} style={styles.container}>
             <Pressable onPress={toDetail} style={styles.pressable}>
                 {
                     props.movie.poster === null
@@ -28,18 +27,18 @@ export default function MovieSummary(props) {
                     />
                     : 
                     <Image 
-                        source={{ uri: props.params.baseUrl + props.params.posterSize + props.movie.poster }} 
+                        source={{ uri: props.params.baseURL + props.params.posterSize + props.movie.poster }} 
                         style={styles.image} 
                         resizeMode='contain' 
                     />
                 }
                 <Text style={styles.title}>{props.movie.title}</Text>
-                <Text>Rating: {props.movie.rating}</Text>
+                <Text>Rating: {props.movie.rating.toFixed(1)}</Text>
             </Pressable>
             <View style={styles.tagContainer}>
                 {
                     props.movie.genre.map(genreId => (
-                        <Pressable onPress={toTag} style={styles.tag}>
+                        <Pressable onPress={toTag} style={styles.tag} key={`${props.movie.id}-${genreId}`}>
                             <Text style={styles.tagText}>
                                 {props.params.genres[`${genreId}`]}
                             </Text>
@@ -47,7 +46,7 @@ export default function MovieSummary(props) {
                     ))
                 }
             </View>
-        </View>
+        </Shadow>
     )
 }
 
@@ -72,41 +71,53 @@ MovieSummary.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 0,
-        borderColor: 'black',
-        marginVertical: 10,
-        padding: 15,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        marginVertical: 8,
+        marginHorizontal: 8,
+        padding: 5,
+        width: Dimensions.get('window').width * 0.45,
+        height: 440,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     pressable: {
         alignItems: 'center',
-        margin: 15,
+        margin: 10,
     },
 
     image: {
-        width: 300,
-        height: 400,
-        marginVertical: 10,
+        width: 180,
+        height: 250,
+        marginVertical: 3,
     },
 
     title: {
-        fontSize: 24,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginVertical: 5
+        flexWrap: 'wrap',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        height: 50,
     },
 
     tagContainer: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'center',
+        height: 90,
+        marginHorizontal: 10,
+        marginBottom: 10,
     },
 
     tag: {
-        borderRadius: 5,
+        borderRadius: 3,
         backgroundColor: '#4d4d4d',
-        marginHorizontal: 2,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        elevation: 2,
+        margin: 2,
+        paddingHorizontal: 7,
+        paddingVertical: 3,
+        elevation: 1,
     },
 
     tagText: {
