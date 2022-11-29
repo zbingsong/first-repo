@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 
-import HorizontalScrollingBaseComponent from "./ScrollingBaseComponent";
+import ScrollingBaseComponent from "./ScrollingBaseComponent";
 import getTopRatedAsync from '../../api/search/TopRatedAPI';
 
 
 export default function TopRatedComponent(props) {
     // console.log(props);
     return (
-        <HorizontalScrollingBaseComponent
+        <ScrollingBaseComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getTopRatedAsync}

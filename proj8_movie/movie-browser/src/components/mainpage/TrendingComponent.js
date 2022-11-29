@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 
-import HorizontalScrollingBaseComponent from "./ScrollingBaseComponent";
+import ScrollingBaseComponent from "./ScrollingBaseComponent";
 import getTrendingAsync from "../../api/search/TrendingAPI";
 
 
 export default function TrendingComponent(props) {
     // console.log(props);
     return (
-        <HorizontalScrollingBaseComponent
+        <ScrollingBaseComponent
             navigate={props.navigation.navigate}
             params={props.route.params}
             api={getTrendingAsync}

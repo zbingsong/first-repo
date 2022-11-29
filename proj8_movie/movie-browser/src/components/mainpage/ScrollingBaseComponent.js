@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MovieTab from "./MovieTab";
 
 
-export default class HorizontalScrollingBaseComponent extends React.Component {
+export default class ScrollingBaseComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -77,7 +77,7 @@ export default class HorizontalScrollingBaseComponent extends React.Component {
 }
 
 
-HorizontalScrollingBaseComponent.propTypes = {
+ScrollingBaseComponent.propTypes = {
     navigate: PropTypes.func,
     params: PropTypes.shape({
         posterSize: PropTypes.string,

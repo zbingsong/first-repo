@@ -4,6 +4,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import TrendingComponent from "./TrendingComponent";
 import TopRatedComponent from "./TopRatedComponent";
+import UpcomingComponent from "./UpcomingComponent";
+import NowPlayingComponent from "./NowPlayingComponent";
 
 
 const TAB = createMaterialTopTabNavigator();
@@ -19,7 +21,9 @@ export default class BrowseComponent extends React.Component {
             <View style={styles.container}>
                 <TAB.Navigator initialRouteName="Trending">
                     <TAB.Screen name='Trending' component={TrendingComponent} initialParams={this.props.params} />
-                    <TAB.Screen name='TopRated' component={TopRatedComponent} initialParams={this.props.params} />
+                    <TAB.Screen name='Top Rated' component={TopRatedComponent} initialParams={this.props.params} />
+                    <TAB.Screen name='Upcoming' component={UpcomingComponent} initialParams={this.props.params} />
+                    <TAB.Screen name='Now Playing' component={NowPlayingComponent} initialParams={this.props.params} />
                 </TAB.Navigator>
             </View>
         )
