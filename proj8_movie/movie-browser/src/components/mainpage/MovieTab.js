@@ -11,7 +11,7 @@ export default function MovieTab(props) {
     }
 
     return (
-        <Shadow distance={6} offset={[9, 9]} style={styles.container}>
+        <Shadow distance={5} offset={[9, 9]} style={styles.container}>
             <Pressable onPress={toDetail} style={styles.pressable}>
                 {
                     props.movie.poster === null
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         // elevation: 5,
         padding: 5,
         width: Dimensions.get('window').width * 0.45,
-        height: 300,
+        height: 340,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -75,15 +75,15 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 150,
-        height: 200,
-        marginVertical: 3,
+        width: 180,
+        height: 250,
+        marginTop: 3,
     },
 
     title: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginVertical: 5,
+        marginVertical: 3,
         flexWrap: 'wrap',
         textAlign: 'center',
         textAlignVertical: 'center',
