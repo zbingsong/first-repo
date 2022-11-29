@@ -10,6 +10,7 @@ export default async function getMovieDetailAsync(id) {
 
     const data = await response.json();
     return {
+        id: data.id,
         title: data.title,
         tagline: data.tagline,
         genres: data.genres.map(item => item.id),

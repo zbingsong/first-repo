@@ -19,6 +19,7 @@ export default class DetailScreen extends React.Component {
 
     // getMovieDetailAsync() returns a single movie in the form:
     // {
+    //     id: number,
     //     title: string,
     //     tagline: string,
     //     genres: array of number,
