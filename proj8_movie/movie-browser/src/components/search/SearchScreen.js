@@ -43,7 +43,7 @@ export default class SearchScreen extends React.Component {
         return (
             <KeyboardAvoidingView 
                 behavior={Platform.OS === "ios" ? "padding" : "height"} 
-                keyboardVerticalOffset={0} 
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} 
                 enabled={Platform.OS === "ios"} 
                 style={styles.container}
             >
