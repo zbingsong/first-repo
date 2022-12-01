@@ -1,33 +1,15 @@
 import PropTypes from 'prop-types';
 
 import searchForMoviesAsync from "../../api/search/SearchAPI";
-import MovieSummary from "./MovieSummary";
-import ScrollingBaseComponent from "../common/ScrollingBaseComponent";
+import SingleColScrollingComponent from "./SingleColScrollingComponent";
 
 
 export default function ResultScreen(props) {
-
-    const movieSummaryParams = {
-        posterSize: props.route.params.posterSize,
-        baseURL: props.route.params.baseURL,
-        genres: props.route.params.genres,
-        defaultImgAsset: props.route.params.defaultImgAsset,
-    }
-
-    const renderItem = ({ item }) => (
-        <MovieSummary 
-            movie={item} 
-            navigateToDetail={id => props.navigation.navigate('Detail', {id: id})} 
-            params={movieSummaryParams}
-        />
-    );
-
     return (
-        <ScrollingBaseComponent
+        <SingleColScrollingComponent
             api={async (page) => await searchForMoviesAsync(props.route.params.title, page)}
-            renderItem={renderItem}
-            loadingImgAsset={props.route.params.loadingImgAsset}
-            errorImgAsset={props.route.params.errorImgAsset}
+            navigation={props.navigation}
+            route={props.route}
         />
     );
 }

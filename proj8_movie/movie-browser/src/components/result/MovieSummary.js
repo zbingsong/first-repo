@@ -10,42 +10,43 @@ export default function MovieSummary(props) {
         props.navigateToDetail(props.movie.id);
     }
 
-    const toTag = () => {
-        alert('tag');
-    }
-
     return (
-        <Shadow distance={5} offset={[9, 9]} style={styles.container}>
+        <Shadow distance={4} offset={[11, 11]} style={styles.container}>
             <Pressable onPress={toDetail} style={styles.pressable}>
-                {
-                    props.movie.poster === null
-                    ? 
-                    <Image 
-                        source={{ uri: props.params.defaultImgAsset }}
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                    : 
-                    <Image 
-                        source={{ uri: props.params.baseURL + props.params.posterSize + props.movie.poster }} 
-                        style={styles.image} 
-                        resizeMode='contain' 
-                    />
-                }
-                <Text style={styles.title}>{props.movie.title}</Text>
-                <Text>Rating: {props.movie.rating.toFixed(1)}</Text>
+                <View>
+                    {
+                        props.movie.poster === null
+                        ? 
+                        <Image 
+                            source={{ uri: props.params.defaultImgAsset }}
+                            style={styles.image} 
+                            resizeMode='contain' 
+                        />
+                        : 
+                        <Image 
+                            source={{ uri: props.params.baseURL + props.params.posterSize + props.movie.poster }} 
+                            style={styles.image} 
+                            resizeMode='contain' 
+                        />
+                    }
+                </View>
+                
+                <View style={styles.infoContainer}>
+                    <Text style={styles.title}>{props.movie.title}</Text>
+                    <Text>Rating: {props.movie.rating.toFixed(1)}</Text>
+                    <View style={styles.tagContainer}>
+                        {
+                            props.movie.genre.map(genreId => (
+                                <View style={styles.tag} key={`${props.movie.id}-${genreId}`}>
+                                    <Text style={styles.tagText}>
+                                        {props.params.genres[`${genreId}`]}
+                                    </Text>
+                                </View>
+                            ))
+                        }
+                    </View>
+                </View>
             </Pressable>
-            <View style={styles.tagContainer}>
-                {
-                    props.movie.genre.map(genreId => (
-                        <Pressable onPress={toTag} style={styles.tag} key={`${props.movie.id}-${genreId}`}>
-                            <Text style={styles.tagText}>
-                                {props.params.genres[`${genreId}`]}
-                            </Text>
-                        </Pressable>
-                    ))
-                }
-            </View>
         </Shadow>
     )
 }
@@ -76,39 +77,48 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         marginHorizontal: 8,
         padding: 5,
-        width: Dimensions.get('window').width * 0.45,
-        height: 440,
+        width: Dimensions.get('window').width * 0.95,
+        height: Dimensions.get('window').height * 0.35,
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     pressable: {
+        flexDirection: 'row',
         alignItems: 'center',
-        margin: 10,
+        // width: Dimensions.get('window').width * 0.9,
     },
 
     image: {
-        width: 180,
-        height: 250,
+        width: Dimensions.get('window').width * 0.38,
+        height: Dimensions.get('window').height * 0.33,
         marginVertical: 3,
     },
 
+    infoContainer: {
+        width: Dimensions.get('window').width * 0.5,
+        marginLeft: Dimensions.get('window').width * 0.01,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
     title: {
-        fontSize: 14,
+        fontSize: 26,
         fontWeight: 'bold',
         flexWrap: 'wrap',
         textAlign: 'center',
         textAlignVertical: 'center',
-        height: 50,
+        // height: 50,
+        marginBottom: 10,
     },
 
     tagContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        height: 90,
+        // height: 90,
         marginHorizontal: 10,
-        marginBottom: 10,
+        marginTop: 15,
     },
 
     tag: {
@@ -122,5 +132,6 @@ const styles = StyleSheet.create({
 
     tagText: {
         color: '#cccccc',
+        fontSize: 15,
     },
 });
