@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import ScrollingBaseComponent from "../common/ScrollingBaseComponent";
+import DoubleColScrollingComponent from "./DoubleColScrollingComponent";
 import MovieItem from './MovieItem';
 
 
@@ -21,7 +21,7 @@ export default function TabComponent(props) {
     );
 
     return (
-        <ScrollingBaseComponent
+        <DoubleColScrollingComponent
             api={props.api}
             renderItem={renderItem}
             loadingImgAsset={props.params.loadingImgAsset}
