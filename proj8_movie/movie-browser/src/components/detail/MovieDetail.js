@@ -65,6 +65,7 @@ export default class MovieDetail extends React.Component {
                         <Text>{this.props.movie.tagline}</Text>
                         <Text>Release date: {this.props.movie.release}</Text>
                         <Text>Rating: {this.props.movie.rating} based on {this.props.movie.ratingCount} votes</Text>
+                        {/* <StarRating maxStars={10} rating={this.props.movie.rating} selectedStar={null} /> */}
                         <Text>popularity: {this.props.movie.popularity}</Text>
                         <Text>Length: {this.props.movie.length} minutes</Text>
                         <Text>Plot: {'\n'}{this.props.movie.plot}</Text>
