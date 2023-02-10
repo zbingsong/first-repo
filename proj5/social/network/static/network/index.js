@@ -224,9 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     follow_button.style.display = 'none';
                     unfollow_button.style.display = 'block';
-                    const following = document.querySelector('#following-num');
-                    const following_num = parseInt(following.innerHTML) + 1;
-                    following.innerHTML = following_num;
+                    const follower = document.querySelector('#followers-num');
+                    const follower_num = parseInt(follower.innerHTML) + 1;
+                    follower.innerHTML = follower_num;
                 } else {
                     throw response
                 };
@@ -255,9 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     follow_button.style.display = 'block';
                     unfollow_button.style.display = 'none';
-                    const following = document.querySelector('#following-num');
-                    const following_num = parseInt(following.innerHTML) - 1;
-                    following.innerHTML = following_num;
+                    const follower = document.querySelector('#followers-num');
+                    const follower_num = parseInt(follower.innerHTML) - 1;
+                    follower.innerHTML = follower_num;
                 } else {
                     throw response
                 };

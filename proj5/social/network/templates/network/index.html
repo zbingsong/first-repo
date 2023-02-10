@@ -11,8 +11,8 @@
                 <h3>{{ message }}</h3>
             {% else %}
                 <h2 class="p-4">{{ profile.username }}</h2>
-                <p>Following: <span id="following-num">{{profile.following.all.count }}</span></p>
-                <p>Followers: <span id="followers-num">{{profile.followers.all.count }}</span></p>
+                <p>Following: <span id="following-num">{{ profile.following.all.count }}</span></p>
+                <p>Followers: <span id="followers-num">{{ profile.followers.all.count }}</span></p>
                 {% if request.user.is_authenticated and profile.username != request.user.username %}
                     <button class="btn btn-sm btn-primary" id="unfollow-button" data-username="{{ profile.username }}" {% if profile not in request.user.following.all %}style="display: none;"{% endif %}>Unfollow</button>
                     <button class="btn btn-sm btn-primary" id="follow-button" data-username="{{ profile.username }}" {% if profile in request.user.following.all %}style="display: none;"{% endif %}>Follow</button>
